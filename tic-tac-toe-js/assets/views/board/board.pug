@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+    h1=title
+    p #{title}
+    p Welcome to Tic-tac-toe game. #{state}
+    form(method="get" action="/")
+        input(type="hidden" name="delete" value="true")
+        input(type="hidden" name="gameId" value=gameId)
+        input(type="submit" value="New Game")
+    div
+        form(method="get" action="/")
+            input(type="hidden" name="gameId" value=gameId)
+            input(id="hbut" type="hidden" name="button" value="")
+            table(class="center")
+                tr <!-- row -->
+                    td <!-- column --> 
+                        input(class="butt" id="1" type="image" src=pic1)
+                    td  
+                        input(class="butt" id="2" type="image" src=pic2)
+                    td
+                        input(class="butt" id="3" type="image" src=pic3)
+                tr
+                    td
+                        input(class="butt" id="4" type="image" src=pic4)
+                    td
+                        input(class="butt" id="5" type="image" src=pic5)
+                    td
+                        input(class="butt" id="6" type="image" src=pic6)
+                tr
+                    td
+                        input(class="butt" id="7" type="image" src=pic7)
+                    td 
+                        input(class="butt" id="8" type="image" src=pic8)
+                    td 
+                        input(class="butt" id="9" type="image" src=pic9)

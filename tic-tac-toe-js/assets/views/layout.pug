@@ -1,0 +1,22 @@
+include utils.pug
+
+doctype html
+title Tic-tac-toe
+html
+	head
+		block title
+			title=title
+		block meta
+			meta(charset='utf-8')
+			meta(http-equiv='X-UA-Compatible', content='IE=edge')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			+css('/stylesheets/style.css')
+			+css('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+			block css
+			+js('https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+			+js('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+			+js('/javascript/logic.js')
+			block scripts
+	body
+		div
+			block content

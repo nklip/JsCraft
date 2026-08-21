@@ -1,0 +1,24 @@
+{
+  "name": "ttt",
+  "version": "0.0.1",
+  "description": "Tic-tac-toe game based on JS",
+  "main": "tic-tac-toe.js",
+  "dependencies": {
+    "app-module-path": "^2.2.0",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.2",
+    "pug": "^2.0.0-rc.1",
+    "randomstring": "^1.1.5"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.1",
+    "typescript": "^2.1.4"
+  },
+  "scripts": {
+    "test": "istanbul cover _mocha -- test --recursive"
+  },
+  "author": "Nikita Lipatov",
+  "license": "ISC"
+}
