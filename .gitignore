@@ -7,6 +7,16 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+#Intellij Idea
+.idea/
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
