@@ -1,3 +1,5 @@
+'use strict'
+
 let express = require('express')
 var randomstring = require("randomstring");
 let g = require('./game')
@@ -10,6 +12,7 @@ router.get('/', (req, res) => {
 	let button = req.query.button;
 	let gameId = req.query.gameId;
 	let remove = req.query.delete;
+	let game;
 	if (remove) {
 		if (globalMap.has(gameId)) {
 			globalMap.delete(gameId);

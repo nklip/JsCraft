@@ -2,7 +2,6 @@ require('app-module-path').addPath(__dirname + '/src/')
 
 let express = require('express')
 let path = require('path')
-let bodyParser = require('body-parser')
 
 let about = require('game/about')
 let index = require('game/index')
@@ -13,8 +12,8 @@ let app = express()
 app.set('views', path.join(__dirname, 'assets/views'))
 app.set('view engine', 'pug')
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 
 app.use(express.static(path.join(__dirname, 'assets/public')))
 
