@@ -36,11 +36,78 @@
                 border: .25vmin solid black;
             }
 
+            /* the board is focusable so the arrows work without clicking */
+            #game-board:focus {
+                outline: none;
+            }
+
+            /* end-of-round panel, see js/overlay.js */
+            .overlay {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(0, 0, 0, .75);
+                z-index: 10;
+            }
+
+            .overlay[hidden] {
+                display: none; /* needed: display:flex would otherwise beat [hidden] */
+            }
+
+            .overlay-panel {
+                background-color: white;
+                font-family: system-ui, sans-serif;
+                text-align: center;
+                padding: 4vmin 6vmin;
+                border-radius: 1vmin;
+                max-width: 80vmin;
+            }
+
+            /* artwork slot - empty until overlay.show() is given an `art` url */
+            .overlay-art img {
+                display: block;
+                margin: 0 auto 2vmin;
+                max-width: 36vmin;
+                max-height: 36vmin;
+            }
+
+            .overlay-title {
+                font-size: 4vmin;
+                margin: 0 0 1vmin;
+            }
+
+            .overlay--win .overlay-title {
+                color: hsl(140, 55%, 32%);
+            }
+
+            .overlay--lose .overlay-title {
+                color: hsl(210, 55%, 42%);
+            }
+
+            .overlay-message {
+                font-size: 2.2vmin;
+                color: #444;
+                margin: 0 0 3vmin;
+            }
+
+            .overlay-button {
+                font-size: 2.4vmin;
+                padding: 1.2vmin 4vmin;
+                cursor: pointer;
+            }
+
         </style>
-        <!-- main js file -->
-        <script src="./js/game.js" type="module"></script>
+        <!-- classic scripts, loaded in dependency order; defer so the DOM exists first -->
+        <script src="./js/grid.js"  defer></script>
+        <script src="./js/input.js" defer></script>
+        <script src="./js/snake.js" defer></script>
+        <script src="./js/food.js"  defer></script>
+        <script src="./js/overlay.js" defer></script>
+        <script src="./js/game.js"  defer></script>
     </head>
     <body>
-        <div id="game-board"></div>
+        <div id="game-board" tabindex="0"></div>
     </body>
 </html>
