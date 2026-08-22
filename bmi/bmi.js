@@ -1,5 +1,5 @@
 function bmiCalculate(weight, height, isImperial = false) {
-    result = weight / (height * height);
+    const result = weight / (height * height);
     if (isImperial) {
         return Math.round(result * 703 * 100) / 100;
     } else {
