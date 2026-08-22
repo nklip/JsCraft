@@ -47,10 +47,10 @@ Calculator.prototype.calculate = function(expression) {
         if (this.storToken.length == 0) {
             throw new Error(this.Errors.EMPTY_EXPRESSION);
         }
-        var result = new Number();
+        var result = new Operand();
         this.firstStepParsing(result);
         //alert(result.getValue());
-        /*Number _temp = new Number();
+        /*Number _temp = new Operand();
         firstStepParsing(_temp);
         if (storToken.intern() != "".intern()) {
             throw new ParserException(error.typeError.SYNTAX);
@@ -58,7 +58,7 @@ Calculator.prototype.calculate = function(expression) {
         return Double.toString(_temp.get()); */
         return result.getValue();
     } catch(exception) {
-        document.write(exception);
+        return exception.message;
     }
 }
 
@@ -67,7 +67,7 @@ Calculator.prototype.firstStepParsing = function(result) {
     var token;
     while((token = this.storToken) == "+" || token == "-") {
         this.getToken();
-        var temp = new Number();
+        var temp = new Operand();
         this.secondStepParsing(temp);
         if(token == "-") {
             result.setValue(result.getValue() - temp.getValue());
@@ -82,7 +82,7 @@ Calculator.prototype.secondStepParsing = function(result) {
     var token;
     while((token = this.storToken) == "*" || token == "/" || token == "%") {
         this.getToken();
-        var temp = new Number();
+        var temp = new Operand();
         this.thirdStepParsing(temp);
         if(token == "/") {
             if (temp.getValue() == 0.0) {
@@ -105,7 +105,7 @@ Calculator.prototype.thirdStepParsing = function(result) {
     this.fourthStepParsing(result);
     if (this.storToken == "^") {
         this.getToken();
-        var temp = new Number(0.0);
+        var temp = new Operand(0.0);
         this.fourthStepParsing(temp);
         result.setValue(Math.pow(result.getValue(), temp.getValue()));
     }
@@ -113,13 +113,13 @@ Calculator.prototype.thirdStepParsing = function(result) {
 
 Calculator.prototype.fourthStepParsing = function(result) {
     var str = "";
-    if ((this.typeToken == this.Types.DELIMITER) && this.storToken == "+" || this.storToken == "-") {
+    if ((this.typeToken == this.Types.DELIMITER) && (this.storToken == "+" || this.storToken == "-")) {
         str = this.storToken;
         this.getToken();
     }
     this.fifthStepParsing(result);
     if (str == "-") {
-        result.setValue(result.getValue - 2 * result.getValue());
+        result.setValue(result.getValue() - 2 * result.getValue());
     }
 }
 
@@ -197,18 +197,15 @@ Calculator.prototype.isDigit = function(digit) {
 }
 
 
-var Number = function(){
-    this.value = 0;
-}
-var Number = function(value){
-    this.value = parseFloat(value);
+var Operand = function(value){
+    this.value = (value === undefined) ? 0 : parseFloat(value);
 }
 
-Number.prototype.getValue = function() {
+Operand.prototype.getValue = function() {
     return parseFloat(this.value);
 }
 
-Number.prototype.setValue = function(value) {
+Operand.prototype.setValue = function(value) {
     this.value = parseFloat(value);
 }
 
