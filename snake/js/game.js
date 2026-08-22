@@ -24,7 +24,6 @@ function main(currentTime) {
         return
     }
 
-    console.log('Render');
     lastRenderTime = currentTime
 
     update();
@@ -55,6 +54,6 @@ function checkWin() {
 
 function reloadWindows(message) {
     if (confirm(message)) {
-        window.location = '/snake/index.html'
+        window.location.reload()
     }
 }
