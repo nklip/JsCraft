@@ -1,8 +1,7 @@
 extends ../layout
 
 block content
-    h1=title
-    p #{title}
+    h1 Tic-tac-toe
     p Welcome to Tic-tac-toe game. #{state}
     form(method="get" action="/")
         input(type="hidden" name="delete" value="true")
