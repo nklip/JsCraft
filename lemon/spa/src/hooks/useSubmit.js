@@ -17,9 +17,12 @@ const useSubmit = () => {
     console.log("INCOMING DATA: " + JSON.stringify(data));
     try {
       let success = false;
-      if (data.guests == 2) { // always success
+      // guests comes off the form as a string, so compare numerically rather
+      // than swapping == for === , which would never match
+      const guests = Number(data.guests);
+      if (guests === 2) { // always success
         success = true;
-      } else if (data.guests == 4) { // random
+      } else if (guests === 4) { // random
         await wait(2000);
         if (random < 0.5) {
           throw new Error("Something went wrong");
