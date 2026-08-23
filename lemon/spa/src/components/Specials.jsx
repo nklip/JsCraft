@@ -8,7 +8,7 @@ function Specials() {
     const [specials, setSpecials] = useState([]);
 
     const fetchData = () => {
-        fetch(process.env.REACT_APP_DB + "/specials")
+        fetch(import.meta.env.VITE_DB + "/specials")
           .then((response) => response.json())
           .then((data) => setSpecials(data))
           .catch((error) => console.log(error));

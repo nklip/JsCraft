@@ -38,7 +38,7 @@ const specialsResponse = [
 ]
 
 async function mockFetch(url) {
-    if (url.startsWith(process.env.REACT_APP_DB)) {
+    if (url.startsWith(import.meta.env.VITE_DB)) {
         return {
             ok: true,
             status: 200,
@@ -50,11 +50,11 @@ async function mockFetch(url) {
 }
 
 beforeEach(() => {
-    jest.spyOn(window, 'fetch').mockImplementation(mockFetch);
+    vi.spyOn(window, 'fetch').mockImplementation(mockFetch);
 })
 
 afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
 });
 
 test('Specials page', async() => {

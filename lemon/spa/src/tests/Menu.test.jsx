@@ -48,19 +48,19 @@ const desertsResponse = [
 ]
 
 async function mockFetch(url) {
-  if (url.startsWith(process.env.REACT_APP_DB + "/food")) {
+  if (url.startsWith(import.meta.env.VITE_DB + "/food")) {
     return {
       ok: true,
       status: 200,
       json: async () => foodResponse,
     };
-  } else if (url.startsWith(process.env.REACT_APP_DB + "/drinks")) {
+  } else if (url.startsWith(import.meta.env.VITE_DB + "/drinks")) {
     return {
       ok: true,
       status: 200,
       json: async () => drinksResponse,
     };
-  } else if (url.startsWith(process.env.REACT_APP_DB + "/deserts")) {
+  } else if (url.startsWith(import.meta.env.VITE_DB + "/deserts")) {
     return {
       ok: true,
       status: 200,
@@ -72,11 +72,11 @@ async function mockFetch(url) {
 }
 
 beforeEach(() => {
-  jest.spyOn(window, 'fetch').mockImplementation(mockFetch);
+  vi.spyOn(window, 'fetch').mockImplementation(mockFetch);
 })
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('Menu page', async () => {

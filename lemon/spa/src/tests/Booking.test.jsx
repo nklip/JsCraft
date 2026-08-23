@@ -18,11 +18,11 @@ async function mockFetch(url) {
 }
 
 beforeEach(() => {
-    jest.spyOn(window, 'fetch').mockImplementation(mockFetch);
+    vi.spyOn(window, 'fetch').mockImplementation(mockFetch);
 })
 
 afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
 });
 
 test('empty Full name', async() => {

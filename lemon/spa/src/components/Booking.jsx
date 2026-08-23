@@ -57,7 +57,7 @@ function Booking() {
     });
 
     const fetchBooking = () => {
-      let url = process.env.REACT_APP_DB + "/booking";
+      let url = import.meta.env.VITE_DB + "/booking";
 
       // GET request
       fetch(url)
@@ -120,7 +120,10 @@ function Booking() {
             Reserve a table
           </Heading>
           <Box p={6} rounded="md" w="100%" alignItems="center">
-            <form onSubmit={formik.handleSubmit}>
+            {/* noValidate hands validation to Yup. Without it the browser
+                blocks submit on <input type="email"> and shows its own native
+                bubble, so the custom messages below never appeared. */}
+            <form onSubmit={formik.handleSubmit} noValidate>
               <VStack spacing={4}>
 
                 <FormControl isInvalid={formik.touched.name && formik.errors.name}>

@@ -11,7 +11,7 @@ const useSubmit = () => {
   const [response, setResponse] = useState(false);
 
   const submit = async (url, data) => {
-    url = process.env.REACT_APP_DB + url;
+    url = import.meta.env.VITE_DB + url;
     const random = Math.random();
     setLoading(true);
     console.log("INCOMING DATA: " + JSON.stringify(data));

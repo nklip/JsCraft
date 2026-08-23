@@ -19,21 +19,21 @@ function Menu() {
     const [deserts, setDeserts] = useState([]);
 
     const fetchFoodData = () => {
-        fetch(process.env.REACT_APP_DB + "/food")
+        fetch(import.meta.env.VITE_DB + "/food")
           .then((response) => response.json())
           .then((data) => setFood(data))
           .catch((error) => console.log(error));
     };
 
     const fetchDrinksData = () => {
-        fetch(process.env.REACT_APP_DB + "/drinks")
+        fetch(import.meta.env.VITE_DB + "/drinks")
           .then((response) => response.json())
           .then((data) => setDrinks(data))
           .catch((error) => console.log(error));
     };
 
     const fetchDesertsData = () => {
-        fetch(process.env.REACT_APP_DB + "/deserts")
+        fetch(import.meta.env.VITE_DB + "/deserts")
           .then((response) => response.json())
           .then((data) => setDeserts(data))
           .catch((error) => console.log(error));

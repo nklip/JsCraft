@@ -7,13 +7,17 @@ A <b>Single Page Application</b> is a website or web application that dynamicall
 
 1. Start up json-server
 ```bash
-json-server --watch db.json --port 5555
+npm run server
 ```
 
 2. Start up React
 ```bash
 npm start
 ```
+
+This app is built with **Vite**, not create-react-app. `npm start` and
+`npm run dev` both launch the dev server; `npm run build` produces `build/`,
+and `npm test` runs the suite under Vitest.
 
 ## Content
 * [How to create a DB mock using json-server](#how-to-create-a-db-mock-using-json-server)
@@ -25,17 +29,13 @@ npm start
 
 ### How to create a DB mock using json-server
 
-1. Install json-server
-
-```bash
-npm i -g json-server
-```
+1. json-server is already a devDependency here, so no global install is needed
 
 2. Add json data. For example, db.json
 
 3. Run json-server
 ```bash
-json-server --watch db.json --port 5555
+npm run server   # json-server --watch db.json --port 5555
 ```
 
 ### How to create a test mocking HTTP requests using testing-library
@@ -67,19 +67,19 @@ const foodResponse = [
 3. Intercept HTTP request
 ```jsx
 async function mockFetch(url) {
-  if (url.startsWith(process.env.REACT_APP_DB + "/food")) {
+  if (url.startsWith(import.meta.env.VITE_DB + "/food")) {
     return {
       ok: true,
       status: 200,
       json: async () => foodResponse,
     };
-  } else if (url.startsWith(process.env.REACT_APP_DB + "/drinks")) {
+  } else if (url.startsWith(import.meta.env.VITE_DB + "/drinks")) {
     return {
       ok: true,
       status: 200,
       json: async () => drinksResponse,
     };
-  } else if (url.startsWith(process.env.REACT_APP_DB + "/deserts")) {
+  } else if (url.startsWith(import.meta.env.VITE_DB + "/deserts")) {
     return {
       ok: true,
       status: 200,
@@ -116,13 +116,15 @@ test('Menu page', async () => {
 ### How to create and share global properties
 
 1. Create a .env file in the root of the React app
-2. Add variables. Each variable should start with a <b>REACT_APP_</b> for it to work.
-3. Import variables using <b>process.env.REACT_APP_</b>
+2. Add variables. Under Vite each variable must start with <b>VITE_</b> to be
+exposed to the client. (Under create-react-app the prefix was <b>REACT_APP_</b>;
+this project migrated, so the prefix and the accessor both changed.)
+3. Read variables using <b>import.meta.env.VITE_</b>
 ```jsx
 return (
   <div>
     <h1>
-      We are using {process.env.REACT_APP_DATABASE}
+      We are using {import.meta.env.VITE_DATABASE}
     </h1>
   </div>
 );

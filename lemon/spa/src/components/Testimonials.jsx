@@ -8,7 +8,7 @@ function Testimonials() {
     const [testimonials, setTestimonials] = useState([]);
 
     const fetchData = () => {
-        fetch(process.env.REACT_APP_DB + "/testimonials")
+        fetch(import.meta.env.VITE_DB + "/testimonials")
           .then((response) => response.json())
           .then((data) => setTestimonials(data))
           .catch((error) => console.log(error));
