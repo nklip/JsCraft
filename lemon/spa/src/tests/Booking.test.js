@@ -18,7 +18,7 @@ async function mockFetch(url) {
 }
 
 beforeEach(() => {
-    windowFetchSpy = jest.spyOn(window, 'fetch').mockImplementation(mockFetch);
+    jest.spyOn(window, 'fetch').mockImplementation(mockFetch);
 })
 
 afterEach(() => {
