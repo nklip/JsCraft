@@ -1,9 +1,12 @@
-# Little Lemon
+# Little Lemon - React JS implementation
+<sub>[Back to Little Lemon](../README.md#content)</sub>
+
 This project was done as part of <b>Meta-Front End Developer Professional Certificate</b>
 
 A <b>Single Page Application</b> is a website or web application that dynamically rewrites a current web page with new data from the web server, instead of the default method of a web browser loading entire new pages.
 
 ## Start up
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
 
 1. Start up json-server
 ```bash
@@ -20,6 +23,8 @@ This app is built with **Vite**, not create-react-app. `npm start` and
 and `npm test` runs the suite under Vitest.
 
 ## Content
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
+
 * [How to create a DB mock using json-server](#how-to-create-a-db-mock-using-json-server)
 * [How to create a test mocking HTTP requests using testing-library](#how-to-create-a-test-mocking-http-requests-using-testing-library)
 * [How to create and share global properties](#how-to-create-and-share-global-properties)
@@ -28,6 +33,7 @@ and `npm test` runs the suite under Vitest.
 * [TODOs](#todos)
 
 ### How to create a DB mock using json-server
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
 
 1. json-server is already a devDependency here, so no global install is needed
 
@@ -39,6 +45,8 @@ npm run server   # json-server --watch db.json --port 5555
 ```
 
 ### How to create a test mocking HTTP requests using testing-library
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
+
 1. Import resources
 ```jsx
 import { render, screen } from '@testing-library/react';
@@ -114,6 +122,7 @@ test('Menu page', async () => {
 ```
 
 ### How to create and share global properties
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
 
 1. Create a .env file in the root of the React app
 2. Add variables. Under Vite each variable must start with <b>VITE_</b> to be
@@ -131,6 +140,7 @@ return (
 ```
 
 ### How to add a custom color for a button
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
 
 Chakra button component looks like:
 ```jsx
@@ -187,6 +197,7 @@ It means that when you create your own color scheme, you need to specify one col
 Then we can use lemon color for our button.
 
 ### How to update date in Formik
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
 
 Declare useFormik hook
 ```jsx
@@ -252,7 +263,6 @@ Update date using Chakra library
     <FormErrorMessage>{formik.errors.date}</FormErrorMessage>
 </FormControl>
 ```
-
 
 ### TODOs
 

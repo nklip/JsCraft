@@ -1,9 +1,11 @@
 # Snake without Canvas
+<sub>[Back to JsCraft](../README.md#content)</sub>
 
 A Snake game drawn with CSS Grid instead of `<canvas>`. Open `index.html` in a
 browser and play - no server, no build step, no dependencies.
 
 ## Structure
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 Six files, each owning one concern:
 
@@ -28,6 +30,7 @@ They are loaded as six ordinary scripts, in dependency order:
 ```
 
 ## Restarting
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 A finished round does **not** reload the page. It resets state in place -
 `SnakeGame.input.reset()`, `SnakeGame.snake.reset()`, then
@@ -51,6 +54,7 @@ Restarting in place is also what lets state survive between rounds - a reload
 would throw away any round counter.
 
 ### Adding artwork and per-round targets
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 `SnakeGame.overlay.show()` takes an optional `art` url, rendered above the title,
 and sets `.overlay--win` or `.overlay--lose` so the two outcomes can look
@@ -72,6 +76,7 @@ A round counter therefore only has to set `foodToWin` before restarting - the
 loop itself does not change.
 
 ## Why not ES modules?
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 This project used `import`/`export` with `<script type="module">`. That works,
 but only over `http://`. Opening `index.html` directly from disk failed with:
@@ -95,6 +100,7 @@ was the other option, and it was rejected on purpose: it would add
 that is otherwise six static files.
 
 ### Why the IIFE + namespace, and not just plain scripts
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 Dropping `import`/`export` alone breaks this code. Classic scripts share one
 global scope, and three of the original five files each declared `update` and `draw`:
@@ -136,6 +142,7 @@ conversion drops into one shared scope - 17 of which land on `window` as
 function declarations, the rest sharing script scope.
 
 ### Two things that will bite you
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 **`defer` is required, not decorative.** `type="module"` implies deferred
 execution; a plain `<script src>` does not. `game.js` reads `#game-board` at top
@@ -156,6 +163,7 @@ earlier already set `SnakeGame`, so `||` short-circuits and **the entire game is
 never evaluated** - no error, no output, a blank board.
 
 ## When this approach is preferable to ES modules
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 Reach for namespaced classic scripts when:
 
@@ -173,6 +181,7 @@ Reach for namespaced classic scripts when:
   modern engine; `<script defer>` works essentially everywhere.
 
 ## When ES modules are the better choice
+<sub>[Back to top](#snake-without-canvas)</sub>
 
 Go back to `import`/`export` when:
 

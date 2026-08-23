@@ -1,13 +1,18 @@
 # Portfolio
+<sub>[Back to JsCraft](../README.md#content)</sub>
 
 This project was done for <b>'Meta Front-End Developer Professional Certificate'</b> and demonstrates the React App and it's integration with next libraries.
 
 ## Content
+<sub>[Back to top](#portfolio)</sub>
+
 * [fontawesome](#fontawesome) 
 * [chakra](#chakra) 
 * [formik](#formik)
 
 ### Fontawesome
+<sub>[Back to top](#portfolio)</sub>
+
 <b>Font Awesome</b> is a popular icon library that provides scalable vector icons that can be customized with CSS. 
 
 #### Imports:
@@ -65,6 +70,8 @@ const socials = [
 ```
 
 ### Chakra
+<sub>[Back to top](#portfolio)</sub>
+
 <b>Chakra</b> UI is a simple, modular and accessible component library that provides you with the building blocks you need for your React applications. 
 
 #### Imports
@@ -83,6 +90,7 @@ import { Avatar, Heading, VStack } from "@chakra-ui/react";
 ```
 
 ### Formik
+<sub>[Back to top](#portfolio)</sub>
 
 Formik is the world's most popular open source form library for React and React Native.
 
