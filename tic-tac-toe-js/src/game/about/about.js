@@ -12,7 +12,7 @@ let About = (() => {
 
 		get response() { // really complicated calculations
 			return {
-				title : 'fuck off',
+				title : 'Nine squares. How hard could it be?',
 				message: message
 			}
 		}
