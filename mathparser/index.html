@@ -1,32 +1,660 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Applies a saved theme choice before the page paints. Placed this
+             early and run synchronously on purpose: if this ran later (e.g.
+             alongside the other scripts near the end of <body>), a saved
+             "dark" preference on a light-OS machine would render light for a
+             moment and then flip, which is the classic flash-of-wrong-theme.
+             It only acts when a preference was saved; with nothing saved yet,
+             the CSS below still follows the OS via prefers-color-scheme. -->
+        <script>
+            (function () {
+                try {
+                    var saved = localStorage.getItem("mathparser-theme");
+                    if (saved === "light" || saved === "dark") {
+                        document.documentElement.setAttribute("data-theme", saved);
+                    }
+                } catch (error) {
+                    // localStorage can throw (e.g. Safari private browsing) -
+                    // falling back to the OS theme below is fine either way
+                }
+            })();
+        </script>
         <title>Mathparser</title>
-        <link rel="shortcut icon" type="image/x-icon" href="icon.jpeg" />
+        <link rel="shortcut icon" type="image/jpeg" href="icon.jpeg" />
         <script src="mathparser.js"></script>
+        <style>
+            :root {
+                color-scheme: light dark;
+                --bg-1: #eef2ff;
+                --bg-2: #e0f2fe;
+                --card: #ffffff;
+                --text: #1e293b;
+                --muted: #64748b;
+                --border: #e2e8f0;
+                --accent: #4f46e5;
+                --accent-dark: #4338ca;
+                --screen-bg: #0f172a;
+                --screen-text: #86efac;
+                --shadow: 0 24px 64px -20px rgba(30, 41, 59, 0.35);
+                --radius-lg: 20px;
+                --radius-md: 12px;
+            }
+
+            /* Dark palette, defined twice on purpose: once for the OS-level
+               preference, guarded so an explicit light choice can override
+               it, and once unconditionally for an explicit dark choice on a
+               light-OS machine. Plain CSS has no way to combine a media
+               query with an attribute selector in one rule, so duplicating
+               the values is the accepted way to let a manual toggle win over
+               the system setting in both directions. Keep both lists in
+               sync if a color changes. */
+            @media (prefers-color-scheme: dark) {
+                :root:not([data-theme="light"]) {
+                    --bg-1: #0b1120;
+                    --bg-2: #111827;
+                    --card: #1e293b;
+                    --text: #e2e8f0;
+                    --muted: #94a3b8;
+                    --border: #334155;
+                    --accent: #818cf8;
+                    --accent-dark: #6366f1;
+                    --screen-bg: #020617;
+                    --screen-text: #4ade80;
+                    --shadow: 0 24px 64px -20px rgba(0, 0, 0, 0.6);
+                }
+            }
+
+            :root[data-theme="dark"] {
+                color-scheme: dark;
+                --bg-1: #0b1120;
+                --bg-2: #111827;
+                --card: #1e293b;
+                --text: #e2e8f0;
+                --muted: #94a3b8;
+                --border: #334155;
+                --accent: #818cf8;
+                --accent-dark: #6366f1;
+                --screen-bg: #020617;
+                --screen-text: #4ade80;
+                --shadow: 0 24px 64px -20px rgba(0, 0, 0, 0.6);
+            }
+
+            /* only color-scheme needs restating here - the variable values
+               already match the base :root, this just pins native form
+               control chrome (e.g. scrollbars) to light when the OS is dark
+               but the user has explicitly chosen light */
+            :root[data-theme="light"] {
+                color-scheme: light;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                color: var(--text);
+                background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            }
+
+            .card {
+                width: min(480px, 100%);
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow);
+                padding: clamp(24px, 5vw, 40px);
+            }
+
+            .card__eyebrow {
+                margin: 0 0 4px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--accent);
+            }
+
+            .card__title {
+                margin: 0 0 8px;
+                font-size: clamp(1.5rem, 4vw, 1.875rem);
+            }
+
+            .card__subtitle {
+                margin: 0 0 28px;
+                color: var(--muted);
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+
+            .card__subtitle code {
+                display: inline-block;
+                margin-top: 6px;
+                padding: 2px 6px;
+                border-radius: 6px;
+                background: var(--bg-1);
+                border: 1px solid var(--border);
+                color: var(--text);
+                font-size: 0.85rem;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root:not([data-theme="light"]) .card__subtitle code {
+                    background: rgba(255, 255, 255, 0.06);
+                }
+            }
+
+            :root[data-theme="dark"] .card__subtitle code {
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            label {
+                display: block;
+                margin-bottom: 6px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--muted);
+            }
+
+            .field {
+                margin-bottom: 18px;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                padding: 12px 14px;
+                font-size: 1.05rem;
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                background: var(--card);
+                color: var(--text);
+                outline: none;
+                transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            }
+
+            input[type="text"]:focus {
+                border-color: var(--accent);
+                /* plain fallback for browsers without color-mix(), overridden below */
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+                box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+            }
+
+            #idResult {
+                background: var(--screen-bg);
+                color: var(--screen-text);
+                border-color: var(--screen-bg);
+                text-align: right;
+                font-size: 1.2rem;
+                cursor: default;
+            }
+
+            /* scoped to .btn-calculate rather than the bare "button" tag, since
+               the help button below is also a <button> and must not inherit
+               this full-width, block-level look */
+            .btn-calculate {
+                display: block;
+                width: 100%;
+                margin-top: 4px;
+                padding: 13px 18px;
+                font-size: 1rem;
+                font-weight: 600;
+                color: #fff;
+                background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+                border: none;
+                border-radius: var(--radius-md);
+                cursor: pointer;
+                transition: transform 0.1s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+            }
+
+            .btn-calculate:hover {
+                box-shadow: 0 10px 24px -8px rgba(79, 70, 229, 0.6);
+                box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--accent) 60%, transparent);
+            }
+
+            .btn-calculate:active,
+            .btn-calculate.is-pressed {
+                transform: translateY(1px);
+                opacity: 0.92;
+            }
+
+            .eyebrow-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 4px;
+            }
+
+            .eyebrow-row .card__eyebrow {
+                margin: 0;
+            }
+
+            /* groups the theme toggle and the help button together on the
+               right of the eyebrow row, theme toggle first so it renders to
+               the left of the "?" button */
+            .eyebrow-actions {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            /* positioning context for the tooltip, so it anchors to the "?"
+               button rather than to the card */
+            .help-wrap {
+                position: relative;
+                display: inline-flex;
+            }
+
+            /* shared shape for both small circular icon buttons; each one
+               below only adds what makes it different */
+            .icon-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 22px;
+                height: 22px;
+                padding: 0;
+                border: 1px solid var(--border);
+                border-radius: 50%;
+                background: rgba(100, 116, 139, 0.12);
+                color: var(--muted);
+                line-height: 1;
+                transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+            }
+
+            .icon-btn:hover,
+            .icon-btn:focus-visible {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff;
+            }
+
+            .icon-btn:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+
+            .help-btn {
+                font-size: 0.75rem;
+                font-weight: 700;
+                cursor: help;
+            }
+
+            /* pinned open (touch) gets the same look as :hover, since a tap
+               is the touch equivalent of a mouse-over here */
+            .help-btn.is-open {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff;
+            }
+
+            .theme-btn {
+                cursor: pointer;
+            }
+
+            .theme-btn svg {
+                width: 13px;
+                height: 13px;
+            }
+
+            /* aria-pressed="true" means dark mode is the active theme; give
+               that state the same filled look as hover/focus so the button
+               also communicates "this is currently on" at rest */
+            .theme-btn[aria-pressed="true"] {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff;
+            }
+
+            .theme-btn .icon-moon {
+                display: none;
+            }
+
+            /* which icon shows follows the exact same OS-vs-explicit rule as
+               the color variables above: system dark unless light was chosen
+               explicitly, or dark chosen explicitly regardless of the OS */
+            @media (prefers-color-scheme: dark) {
+                :root:not([data-theme="light"]) .theme-btn .icon-sun {
+                    display: none;
+                }
+                :root:not([data-theme="light"]) .theme-btn .icon-moon {
+                    display: block;
+                }
+            }
+
+            :root[data-theme="dark"] .theme-btn .icon-sun {
+                display: none;
+            }
+
+            :root[data-theme="dark"] .theme-btn .icon-moon {
+                display: block;
+            }
+
+            /* hidden by default; CSS alone reveals it on hover or keyboard
+               focus, JS additionally toggles .is-visible so a tap can pin it
+               open on touchscreens, which have no hover state at all */
+            .help-tooltip {
+                position: absolute;
+                top: calc(100% + 10px);
+                right: 0;
+                z-index: 20;
+                width: max-content;
+                max-width: min(260px, calc(100vw - 88px));
+                padding: 14px 16px;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                box-shadow: var(--shadow);
+                text-align: left;
+                font-size: 0.8rem;
+                line-height: 1.5;
+                color: var(--text);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-4px);
+                pointer-events: none;
+                transition: opacity 0.15s ease, transform 0.15s ease;
+            }
+
+            .help-tooltip::before {
+                content: "";
+                position: absolute;
+                top: -6px;
+                right: 9px;
+                width: 12px;
+                height: 12px;
+                background: var(--card);
+                border-left: 1px solid var(--border);
+                border-top: 1px solid var(--border);
+                transform: rotate(45deg);
+            }
+
+            .help-wrap:hover .help-tooltip,
+            .help-btn:focus-visible ~ .help-tooltip,
+            .help-tooltip.is-visible {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .help-tooltip__title {
+                margin: 0 0 8px;
+                font-weight: 700;
+                color: var(--text);
+            }
+
+            .help-tooltip dl {
+                margin: 0 0 10px;
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 6px 10px;
+            }
+
+            .help-tooltip dt {
+                font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+                font-weight: 700;
+                color: var(--accent);
+                white-space: nowrap;
+            }
+
+            .help-tooltip dd {
+                margin: 0;
+                color: var(--muted);
+            }
+
+            .help-tooltip code {
+                padding: 1px 4px;
+                border-radius: 4px;
+                background: var(--bg-1);
+                border: 1px solid var(--border);
+                font-size: 0.78rem;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root:not([data-theme="light"]) .help-tooltip code {
+                    background: rgba(255, 255, 255, 0.06);
+                }
+            }
+
+            :root[data-theme="dark"] .help-tooltip code {
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            .help-tooltip__note {
+                margin: 8px 0 0;
+                color: var(--muted);
+            }
+
+            .help-tooltip__note:first-of-type {
+                margin-top: 0;
+            }
+
+            .card__footer {
+                margin: 22px 0 0;
+                text-align: center;
+                font-size: 0.78rem;
+                color: var(--muted);
+            }
+        </style>
     </head>
     <body>
-        <div>
-            <div>Please input math expression (for example: '2 + 2 * 2 - 1/0.5 + 3^2 + (7 + 7) * 0.1'  (which equal 14.4)):</div>
-            <input id="idExpressionText"     size="35"    type="text"     name="expressionText" />
-            <button id="idExpressionButton"   type="button"   onclick="calculateExpressionOnClick()" value="Calculate">Calculate</button>
-            <br/>
-            <div>Result:</div>
-            <input id="idResult" size="35" type="text" name="resultName" readonly="readonly"/>
-        </div>
+        <main class="card">
+            <div class="eyebrow-row">
+                <p class="card__eyebrow">Mathparser</p>
+                <span class="eyebrow-actions">
+                    <button
+                        type="button"
+                        id="idThemeToggle"
+                        class="icon-btn theme-btn"
+                        aria-label="Switch to dark theme"
+                        aria-pressed="false"
+                    >
+                        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <line x1="12" y1="2" x2="12" y2="4"></line>
+                            <line x1="12" y1="20" x2="12" y2="22"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="2" y1="12" x2="4" y2="12"></line>
+                            <line x1="20" y1="12" x2="22" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <span class="help-wrap">
+                        <button
+                            type="button"
+                            id="idHelpButton"
+                            class="icon-btn help-btn"
+                            aria-label="Show supported syntax"
+                            aria-expanded="false"
+                            aria-describedby="idHelpTooltip"
+                        >?</button>
+                        <div id="idHelpTooltip" class="help-tooltip" role="tooltip">
+                            <p class="help-tooltip__title">Supported syntax</p>
+                            <dl>
+                                <div><dt>+ &minus;</dt><dd>Addition and subtraction, including a leading sign, e.g. <code>-5</code></dd></div>
+                                <div><dt>* /</dt><dd>Multiplication and division</dd></div>
+                                <div><dt>%</dt><dd>Modulo (remainder)</dd></div>
+                                <div><dt>^</dt><dd>Power, e.g. <code>2^10</code></dd></div>
+                                <div><dt>( )</dt><dd>Grouping, can be nested</dd></div>
+                            </dl>
+                            <p class="help-tooltip__note">Decimals and spaces are fine; spaces are ignored. Up to 1024 characters.</p>
+                            <p class="help-tooltip__note">Press Enter or click Calculate to evaluate.</p>
+                            <p class="help-tooltip__note">Division by zero, unbalanced brackets and empty input are reported as errors, not crashes.</p>
+                        </div>
+                    </span>
+                </span>
+            </div>
+            <h1 class="card__title">Expression calculator</h1>
+            <p class="card__subtitle">
+                Enter a math expression and press Calculate.
+                <br />
+                <code>2 + 2 * 2 - 1/0.5 + 3^2 + (7 + 7) * 0.1</code> evaluates to 14.4.
+            </p>
+
+            <div class="field">
+                <label for="idExpressionText">Expression</label>
+                <input id="idExpressionText" size="35" type="text" name="expressionText" placeholder="e.g. (3 + 4) * 2 - 1" autocomplete="off" />
+            </div>
+
+            <button id="idExpressionButton" class="btn-calculate" type="button" onclick="calculateExpressionOnClick()" value="Calculate">Calculate</button>
+
+            <div class="field" style="margin-top: 18px;">
+                <label for="idResult">Result</label>
+                <input id="idResult" size="35" type="text" name="resultName" readonly="readonly" />
+            </div>
+
+            <p class="card__footer">Pure JavaScript · no frameworks, no build step</p>
+        </main>
         <script type="text/javascript">
 
             function calculateExpressionOnClick() {
                 var expressionValue = document.getElementById("idExpressionText").value;
                 var calculator = new Calculator();
                 var text = calculator.calculate(expressionValue);
-                
+
                 console.log("Result: " + text);
 				document.getElementById("idResult").value = text
             }
 
-        </script>
+            // Enter has no default behaviour on a bare <input> outside a <form>,
+            // so it did nothing. This makes it press-and-release the Calculate
+            // button, both visually and functionally: keydown shows the same
+            // pressed look as a mouse click (button:active), keyup releases it
+            // and runs the calculation - wherever focus happens to be.
+            //
+            // preventDefault() on keydown is deliberate even when the button
+            // itself is focused: a native <button> already activates on Enter
+            // in most browsers, and without suppressing that, a keypress there
+            // would fire the calculation twice - once natively, once from this
+            // handler. This keeps the handler below as the single source of
+            // the click, so it behaves the same in every browser regardless of
+            // what element currently has focus.
+            (function () {
+                var button = document.getElementById("idExpressionButton");
 
+                document.addEventListener("keydown", function (event) {
+                    if (event.key !== "Enter") {
+                        return;
+                    }
+                    event.preventDefault();
+                    button.classList.add("is-pressed");
+                });
+
+                document.addEventListener("keyup", function (event) {
+                    if (event.key !== "Enter") {
+                        return;
+                    }
+                    event.preventDefault();
+                    button.classList.remove("is-pressed");
+                    button.click();
+                });
+            })();
+
+            // The "?" help button. CSS alone already reveals the tooltip on
+            // :hover and on keyboard :focus-visible, so this script is not
+            // what makes it appear - it exists for the one thing CSS cannot
+            // do: touchscreens have no hover state, so without a tap target
+            // a touch user could never see the tooltip at all. Tapping the
+            // button pins it open (.is-visible) until it is tapped again,
+            // Escape is pressed, or the user taps elsewhere.
+            (function () {
+                var helpButton = document.getElementById("idHelpButton");
+                var tooltip = document.getElementById("idHelpTooltip");
+
+                function setOpen(open) {
+                    tooltip.classList.toggle("is-visible", open);
+                    helpButton.classList.toggle("is-open", open);
+                    helpButton.setAttribute("aria-expanded", open ? "true" : "false");
+                }
+
+                helpButton.addEventListener("click", function (event) {
+                    event.stopPropagation();
+                    setOpen(!tooltip.classList.contains("is-visible"));
+                });
+
+                document.addEventListener("keydown", function (event) {
+                    if (event.key === "Escape" && tooltip.classList.contains("is-visible")) {
+                        setOpen(false);
+                        // blur, not focus: the CSS rule below also reveals the
+                        // tooltip while the button is focused, so refocusing
+                        // it here would undo the close on the very same frame
+                        helpButton.blur();
+                    }
+                });
+
+                document.addEventListener("click", function (event) {
+                    if (!event.target.closest(".help-wrap")) {
+                        setOpen(false);
+                    }
+                });
+            })();
+
+            // Day/night toggle. The CSS above already knows how to render
+            // both an OS-driven and an explicitly-chosen theme (see the
+            // data-theme rules), and the tiny script at the top of <head>
+            // already applies a saved choice before first paint. This is
+            // just the button: it flips data-theme on <html>, keeps its own
+            // icon and aria-pressed in sync, and remembers the choice.
+            (function () {
+                var root = document.documentElement;
+                var toggle = document.getElementById("idThemeToggle");
+                var STORAGE_KEY = "mathparser-theme";
+
+                // "Explicit" here means either the user already toggled once
+                // this visit, or the head script applied a saved value.
+                // Without either, there is no data-theme attribute yet and
+                // the OS setting is what is actually in effect.
+                function effectiveTheme() {
+                    var explicit = root.getAttribute("data-theme");
+                    if (explicit === "light" || explicit === "dark") {
+                        return explicit;
+                    }
+                    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+                        ? "dark"
+                        : "light";
+                }
+
+                function syncButton(theme) {
+                    toggle.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+                    toggle.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+                }
+
+                // Reflects whatever is already in effect without writing a
+                // data-theme attribute - a fresh visit that is only
+                // following the OS should stay that way (and keep tracking
+                // OS changes) until the user actually clicks.
+                syncButton(effectiveTheme());
+
+                toggle.addEventListener("click", function () {
+                    var next = effectiveTheme() === "dark" ? "light" : "dark";
+                    root.setAttribute("data-theme", next);
+                    syncButton(next);
+                    try {
+                        localStorage.setItem(STORAGE_KEY, next);
+                    } catch (error) {
+                        // ignore - e.g. Safari private browsing can throw on setItem
+                    }
+                });
+            })();
+
+        </script>
     </body>
 </html>
-
