@@ -1,0 +1,146 @@
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+.App {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+header {
+    /* .switch (see Switch/styles.css) positions itself absolutely against
+       the nearest positioned ancestor - this gives it one, so it sits next
+       to the title instead of drifting to the page's top-right corner.
+       Its own 34px height plus a 37px top offset (from Switch/styles.css)
+       puts its actual bottom edge below header's own 40px box, overlapping
+       .App__subtitle beneath it. z-index makes header - and the switch
+       inside it - unambiguously paint above that overlap; without it the
+       switch was frequently unclickable, since the later, non-positioned
+       .App__subtitle silently absorbed the click instead. */
+    position: relative;
+    z-index: 1;
+    min-height: 40px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.App__subtitle {
+    margin: 4px 0 24px;
+    opacity: 0.75;
+}
+
+.countdown {
+    margin-bottom: 24px;
+}
+
+.countdown__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+.countdown__row button {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.countdown__row button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.countdown__bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(128, 128, 128, 0.25);
+    overflow: hidden;
+}
+
+.countdown__bar-fill {
+    height: 100%;
+    background: #2196f3;
+    transition: width 1s linear;
+}
+
+.weather-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.weather-card {
+    border: 1px solid rgba(128, 128, 128, 0.35);
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.weather-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+}
+
+.weather-card__temp {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.weather-card__label {
+    margin: 2px 0 12px;
+    opacity: 0.75;
+}
+
+.weather-card__meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.weather-card__meta dt {
+    opacity: 0.6;
+}
+
+.weather-card__meta dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.weather-card__loading {
+    opacity: 0.6;
+}
+
+.weather-card--error {
+    border-color: #e0522f;
+}
+
+.weather-card__error {
+    color: #e0522f;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.weather-card__stale {
+    margin: 12px 0 0;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.App__footer {
+    margin-top: 28px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
