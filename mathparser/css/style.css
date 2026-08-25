@@ -1,0 +1,421 @@
+:root {
+    color-scheme: light dark;
+    --bg-1: #eef2ff;
+    --bg-2: #e0f2fe;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --accent: #4f46e5;
+    --accent-dark: #4338ca;
+    --screen-bg: #0f172a;
+    --screen-text: #86efac;
+    --shadow: 0 24px 64px -20px rgba(30, 41, 59, 0.35);
+    --radius-lg: 20px;
+    --radius-md: 12px;
+}
+
+/* Dark palette, defined twice on purpose: once for the OS-level
+   preference, guarded so an explicit light choice can override
+   it, and once unconditionally for an explicit dark choice on a
+   light-OS machine. Plain CSS has no way to combine a media
+   query with an attribute selector in one rule, so duplicating
+   the values is the accepted way to let a manual toggle win over
+   the system setting in both directions. Keep both lists in
+   sync if a color changes. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg-1: #0b1120;
+        --bg-2: #111827;
+        --card: #1e293b;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --border: #334155;
+        --accent: #818cf8;
+        --accent-dark: #6366f1;
+        --screen-bg: #020617;
+        --screen-text: #4ade80;
+        --shadow: 0 24px 64px -20px rgba(0, 0, 0, 0.6);
+    }
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg-1: #0b1120;
+    --bg-2: #111827;
+    --card: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #334155;
+    --accent: #818cf8;
+    --accent-dark: #6366f1;
+    --screen-bg: #020617;
+    --screen-text: #4ade80;
+    --shadow: 0 24px 64px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* only color-scheme needs restating here - the variable values
+   already match the base :root, this just pins native form
+   control chrome (e.g. scrollbars) to light when the OS is dark
+   but the user has explicitly chosen light */
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+}
+
+.card {
+    width: min(480px, 100%);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 40px);
+}
+
+.card__eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.card__title {
+    margin: 0 0 8px;
+    font-size: clamp(1.5rem, 4vw, 1.875rem);
+}
+
+.card__subtitle {
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.card__subtitle code {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.85rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .card__subtitle code {
+        background: rgba(255, 255, 255, 0.06);
+    }
+}
+
+:root[data-theme="dark"] .card__subtitle code {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.field {
+    margin-bottom: 18px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1.05rem;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus {
+    border-color: var(--accent);
+    /* plain fallback for browsers without color-mix(), overridden below */
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+#idResult {
+    background: var(--screen-bg);
+    color: var(--screen-text);
+    border-color: var(--screen-bg);
+    text-align: right;
+    font-size: 1.2rem;
+    cursor: default;
+}
+
+/* scoped to .btn-calculate rather than the bare "button" tag, since
+   the help button below is also a <button> and must not inherit
+   this full-width, block-level look */
+.btn-calculate {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 13px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-calculate:hover {
+    box-shadow: 0 10px 24px -8px rgba(79, 70, 229, 0.6);
+    box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.btn-calculate:active,
+.btn-calculate.is-pressed {
+    transform: translateY(1px);
+    opacity: 0.92;
+}
+
+.eyebrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.eyebrow-row .card__eyebrow {
+    margin: 0;
+}
+
+/* groups the theme toggle and the help button together on the
+   right of the eyebrow row, theme toggle first so it renders to
+   the left of the "?" button */
+.eyebrow-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* positioning context for the tooltip, so it anchors to the "?"
+   button rather than to the card */
+.help-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+/* shared shape for both small circular icon buttons; each one
+   below only adds what makes it different */
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: rgba(100, 116, 139, 0.12);
+    color: var(--muted);
+    line-height: 1;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-btn:hover,
+.icon-btn:focus-visible {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.icon-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.help-btn {
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: help;
+}
+
+/* pinned open (touch) gets the same look as :hover, since a tap
+   is the touch equivalent of a mouse-over here */
+.help-btn.is-open {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.theme-btn {
+    cursor: pointer;
+}
+
+.theme-btn svg {
+    width: 13px;
+    height: 13px;
+}
+
+/* aria-pressed="true" means dark mode is the active theme; give
+   that state the same filled look as hover/focus so the button
+   also communicates "this is currently on" at rest */
+.theme-btn[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.theme-btn .icon-moon {
+    display: none;
+}
+
+/* which icon shows follows the exact same OS-vs-explicit rule as
+   the color variables above: system dark unless light was chosen
+   explicitly, or dark chosen explicitly regardless of the OS */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-btn .icon-sun {
+        display: none;
+    }
+    :root:not([data-theme="light"]) .theme-btn .icon-moon {
+        display: block;
+    }
+}
+
+:root[data-theme="dark"] .theme-btn .icon-sun {
+    display: none;
+}
+
+:root[data-theme="dark"] .theme-btn .icon-moon {
+    display: block;
+}
+
+/* hidden by default; CSS alone reveals it on hover or keyboard
+   focus, JS additionally toggles .is-visible so a tap can pin it
+   open on touchscreens, which have no hover state at all */
+.help-tooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 20;
+    width: max-content;
+    max-width: min(260px, calc(100vw - 88px));
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    text-align: left;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.help-tooltip::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 9px;
+    width: 12px;
+    height: 12px;
+    background: var(--card);
+    border-left: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    transform: rotate(45deg);
+}
+
+.help-wrap:hover .help-tooltip,
+.help-btn:focus-visible ~ .help-tooltip,
+.help-tooltip.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.help-tooltip__title {
+    margin: 0 0 8px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.help-tooltip dl {
+    margin: 0 0 10px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 10px;
+}
+
+.help-tooltip dt {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+.help-tooltip dd {
+    margin: 0;
+    color: var(--muted);
+}
+
+.help-tooltip code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    font-size: 0.78rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .help-tooltip code {
+        background: rgba(255, 255, 255, 0.06);
+    }
+}
+
+:root[data-theme="dark"] .help-tooltip code {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.help-tooltip__note {
+    margin: 8px 0 0;
+    color: var(--muted);
+}
+
+.help-tooltip__note:first-of-type {
+    margin-top: 0;
+}
+
+.card__footer {
+    margin: 22px 0 0;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
