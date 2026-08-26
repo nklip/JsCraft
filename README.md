@@ -2,7 +2,7 @@
 Minor JavaScript and React applications
 
 ## Content
-* [BMI](/bmi/README.md) - Body mass index + jest
+* [BMI](/bmi/README.md) - Body mass index calculator webpage + jest
 * [lemon](/lemon/README.md) - project for <b>Meta-Front End Developer Professional Certificate</b>
 * [mathparser](/mathparser/README.md) - a simple math calculator for complex expressions
 * [portfolio](/portfolio/README.md) - a React application

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Applies a saved theme choice before the page paints. Loaded this
+             early and left un-deferred on purpose: as a classic synchronous
+             script, the browser runs it - and only then continues parsing
+             the rest of <head>, including the stylesheet - before anything
+             is painted. If this ran later instead (alongside app.js, near
+             the end of <body>), a saved "dark" preference on a light-OS
+             machine would render light for a moment and then flip, which is
+             the classic flash-of-wrong-theme. See theme-init.js for the
+             "nothing saved yet" case. -->
+        <script src="js/theme-init.js"></script>
+        <title>BMI Calculator</title>
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="js/bmi.js"></script>
+    </head>
+    <body>
+        <main class="card">
+            <div class="eyebrow-row">
+                <p class="card__eyebrow">BMI</p>
+                <span class="eyebrow-actions">
+                    <button
+                        type="button"
+                        id="idThemeToggle"
+                        class="icon-btn theme-btn"
+                        aria-label="Switch to dark theme"
+                        aria-pressed="false"
+                    >
+                        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <line x1="12" y1="2" x2="12" y2="4"></line>
+                            <line x1="12" y1="20" x2="12" y2="22"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="2" y1="12" x2="4" y2="12"></line>
+                            <line x1="20" y1="12" x2="22" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <span class="help-wrap">
+                        <button
+                            type="button"
+                            id="idHelpButton"
+                            class="icon-btn help-btn"
+                            aria-label="Show BMI calculator help"
+                            aria-expanded="false"
+                            aria-describedby="idHelpTooltip"
+                        >?</button>
+                        <div id="idHelpTooltip" class="help-tooltip" role="tooltip">
+                            <p class="help-tooltip__title">Using this calculator</p>
+                            <dl>
+                                <div><dt>Metric</dt><dd>Weight in kg, height in cm</dd></div>
+                                <div><dt>Imperial</dt><dd>Weight in lb, height in inches</dd></div>
+                            </dl>
+                            <p class="help-tooltip__note">Ethnicity changes the healthy-weight thresholds, per NHS guidance: some minority ethnic groups are at increased risk at a lower BMI.</p>
+                            <p class="help-tooltip__note">Press Enter in a field or click Calculate to see your BMI and category.</p>
+                        </div>
+                    </span>
+                </span>
+            </div>
+            <h1 class="card__title">BMI calculator</h1>
+            <p class="card__subtitle">
+                Enter your weight and height to work out your body mass index.
+            </p>
+
+            <div class="unit-toggle" role="radiogroup" aria-label="Units">
+                <input type="radio" id="idUnitMetric" name="unit" value="metric" checked />
+                <label for="idUnitMetric">Metric</label>
+                <input type="radio" id="idUnitImperial" name="unit" value="imperial" />
+                <label for="idUnitImperial">Imperial</label>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="idWeight" id="idWeightLabel">Weight (kg)</label>
+                    <input id="idWeight" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 75" />
+                </div>
+                <div class="field">
+                    <label for="idHeight" id="idHeightLabel">Height (cm)</label>
+                    <input id="idHeight" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 175" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="idEthnicity">Ethnicity</label>
+                <select id="idEthnicity">
+                    <option value="white">White heritage</option>
+                    <option value="other">Black, Asian or other minority ethnic</option>
+                </select>
+            </div>
+
+            <button id="idCalculateButton" class="btn-calculate" type="button">Calculate</button>
+
+            <div id="idResult" class="result">
+                <div id="idResultValue" class="result__value"></div>
+                <span id="idResultStatus" class="result__status"></span>
+            </div>
+
+            <p class="card__footer">Pure JavaScript · no frameworks, no build step</p>
+        </main>
+        <script src="js/app.js"></script>
+    </body>
+</html>

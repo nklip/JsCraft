@@ -38,6 +38,21 @@ The BMI calculator works out if a child or young person is:
 
 See a GP if you're concerned about your child's weight. They may be able to refer you to your local healthy lifestyle programme for children, young people and families.
 
+## Webpage
+<sub>[Back to top](#bmi)</sub>
+
+`index.html` is a small calculator UI for `bmi.js` - no server, no build step. Double-click `index.html` and it works. Pick Metric or Imperial, enter weight and height, choose an ethnicity group, and press Calculate (or Enter) to see the BMI value and its category.
+
+## Day/night toggle
+<sub>[Back to top](#bmi)</sub>
+
+The sun/moon button switches the whole color palette instantly and remembers the choice (`localStorage`), overriding the system theme in either direction. Left untouched, the page just follows the OS setting instead.
+
+## Hover for help
+<sub>[Back to top](#bmi)</sub>
+
+The "?" button, next to the theme toggle, explains the units for each mode and how ethnicity affects the healthy-weight thresholds, on hover. On a touchscreen, where there is no hover, tap it instead - tap again, press Escape, or tap elsewhere to close it.
+
 ## How to test
 <sub>[Back to top](#bmi)</sub>
 
@@ -46,7 +61,9 @@ To run tests -> execute next command line: <b>npm run test</b>
 ## Notes
 <sub>[Back to top](#bmi)</sub>
 
-* bmi.js is a js file with simple js functions.
+* bmi.js is a js file with simple js functions, used both by the Jest tests and directly by index.html as a plain `<script>`.
 * bmi.test.js is a test file which contains Jest tests.
+* index.html / css/style.css / js/app.js are the webpage that wraps bmi.js.
+* js/theme-init.js applies a saved theme choice before first paint, avoiding a flash of the wrong theme.
 
 

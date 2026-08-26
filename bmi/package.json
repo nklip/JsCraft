@@ -2,7 +2,7 @@
   "name": "bmi",
   "version": "1.0.0",
   "description": "a simple BMI function and jest tests",
-  "main": "bmi.js",
+  "main": "js/bmi.js",
   "scripts": {
     "test": "jest"
   },
