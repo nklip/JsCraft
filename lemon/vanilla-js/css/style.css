@@ -48,7 +48,6 @@ footer {
 
 footer div {
     flex: 1;
-    padding: auto;
 }
 
 footer img {
@@ -65,7 +64,16 @@ footer img {
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 1rem;
-} 
+}
+
+/* Hidden from the very first paint. index.js hides them too, but it does so on
+   window.onload, which waits for every image to arrive - so without this rule
+   all three sections rendered at once for the whole download and then snapped
+   to one. */
+#menu,
+#about {
+    display: none;
+}
 
 article {
     background: white;
@@ -77,7 +85,6 @@ article {
     margin: 1rem;
     padding: 2rem;
     opacity: 0.8;
-    text-align: auto;
 }
 
 article:first-child {
@@ -182,5 +189,26 @@ article:not(:first-child) img {
     top: -0.7rem;
 }
 
+/* Below the same 50rem breakpoint the menu drops to one column. Held at two,
+   the padding and margins above left the dish column about one word wide on a
+   phone. */
+@media only screen and (max-width: 50rem) {
+    .menu {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
 
+    /* Side by side, so three pairs of photos don't bury the dishes. */
+    .intro-menu > img {
+        width: 45%;
+    }
 
+    .home-menu ul {
+        padding: 1.5rem;
+    }
+
+    .home-menu li {
+        margin: 1.5rem 0;
+        width: 100%;
+    }
+}
