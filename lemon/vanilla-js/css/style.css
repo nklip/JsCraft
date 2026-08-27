@@ -1,17 +1,23 @@
+/* Padding and borders count inside a declared width. Without this, .menu's
+   width:100% plus its padding pushed 13px past the viewport on a phone and the
+   whole page scrolled sideways. */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /* Common element selectors */
 body {
     background-color: #edefee;
     font-family: 'Markazi Text', serif;
-    margin-bottom: 3rem;
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-top: 3rem;
+    margin: 3rem 5%;
 }
 
 /* different colour for your browser size if less than 50rem ~ 800px */
-@media only screen and (max-width: 50rem) {
+@media only screen and (width <= 50rem) {
     body {
-      background-color: rgb(126, 182, 135);
+      background-color: rgb(126 182 135);
     }
 }
 
@@ -23,8 +29,19 @@ h2 {
     font-size: 2rem;
 }
 
+/* The <h1> only wraps the wordmark, so it contributes no text of its own and
+   should not add heading margins around the image. */
+header h1 {
+    margin: 0;
+}
+
+/* The width/height attributes on every <img> reserve space before the file
+   arrives, but they also act as presentational hints. Wherever CSS overrides one
+   axis, the other must be released to "auto" or the attribute wins and the image
+   is stretched - this one rendered 640x546 instead of 640x175 without it. */
 header img {
     display: block;
+    height: auto;
     margin-left: auto;
     margin-right: auto;
     max-width: 100%;
@@ -38,6 +55,13 @@ ul {
 
 li {
     display: inline-block;
+}
+
+/* The default link blue measured 4.0:1 against the green this page switches to
+   below 50rem - under the 4.5:1 AA floor. Dark slate clears it on both
+   backgrounds: 10.9:1 on the light one, 5.4:1 on the green. */
+nav a {
+    color: #333;
 }
 
 footer {
@@ -54,6 +78,7 @@ footer img {
     height: 4rem;
     max-height: 100%;
     vertical-align: middle;
+    width: auto;
 }
 
 /* style also changes in index.js */
@@ -78,13 +103,31 @@ footer img {
 article {
     background: white;
     border-radius: 2rem;
-    color: #000000;
+    color: #000;
     display: inline-block;
-    font-family: "Open Sans", Arial;
+
+    /* Arial is not a generic family - without the sans-serif fallback a machine
+       missing both fonts drops to the browser default, which is usually serif. */
+    font-family: "Open Sans", Arial, sans-serif;
     font-size: 1.2rem;
     margin: 1rem;
     padding: 2rem;
     opacity: 0.8;
+}
+
+/* Card labels are real headings now; this keeps them at the size the <b> tags
+   they replaced used to render at. */
+article h2 {
+    font-size: 1.2rem;
+    margin: 0 0 1rem;
+}
+
+article p {
+    margin: 0 0 1rem;
+}
+
+article p:last-child {
+    margin-bottom: 0;
 }
 
 article:first-child {
@@ -103,12 +146,13 @@ article:not(:first-child) img {
     height: 7rem;
     margin: auto;
     max-height: 100%;
+    width: auto;
 }
 
 .menu {
     background-color: #b2c3af;
     border-radius: 2rem;
-    box-shadow: rgb(38, 57, 77) 0rem 2rem 3rem -1rem;
+    box-shadow: rgb(38 57 77) 0 2rem 3rem -1rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     left: 0%;
@@ -120,9 +164,15 @@ article:not(:first-child) img {
     width: 100%;
 }
 
+/* Ordered after "article:not(:first-child) img" despite lower specificity. The
+   rule guards against a weaker selector silently losing to an earlier stronger
+   one, but these two never meet: that one matches images in the #home cards,
+   this one matches images in #menu. Grouping the menu rules together is worth
+   more here than source order by specificity. */
+/* stylelint-disable-next-line no-descending-specificity */
 .intro-menu > img {
     border-radius: 2rem;
-    box-shadow: rgb(38, 57, 77) 0rem 2rem 3rem -1rem;
+    box-shadow: rgb(38 57 77) 0 2rem 3rem -1rem;
     filter: blur(0.03rem);
     height: auto;
     width: 75%;
@@ -130,7 +180,7 @@ article:not(:first-child) img {
 
 .intro-menu {
     border-radius: 2rem;
-    color: rgb(39, 39, 39);
+    color: rgb(39 39 39);
     text-align: center;
 }
 
@@ -145,7 +195,7 @@ article:not(:first-child) img {
     text-shadow: 0.06rem 0.06rem black;
 }
 
-.home-menu ul:after {
+.home-menu ul::after {
     clear: both;
     content: "";
     display: block;
@@ -179,7 +229,9 @@ article:not(:first-child) img {
 }
 
 .description {
-    color: #999;
+    /* #999 on white measured 2.85:1, under the 4.5:1 WCAG AA floor for body
+       text. #767676 is the lightest grey that clears it. */
+    color: #767676;
     clear: both;
     display: block;
     font-size: 1.2rem;
@@ -192,7 +244,7 @@ article:not(:first-child) img {
 /* Below the same 50rem breakpoint the menu drops to one column. Held at two,
    the padding and margins above left the dish column about one word wide on a
    phone. */
-@media only screen and (max-width: 50rem) {
+@media only screen and (width <= 50rem) {
     .menu {
         grid-template-columns: 1fr;
         padding: 1rem;

@@ -20,14 +20,14 @@
     <body>
         <script src="js/index.js"></script>
         <!-- Executes when page is loaded/updated -->
-        <script type="text/javascript">
+        <script>
             window.onload = byDefault;
         </script>
 
         <header>
-            <!-- Little lemon -->
-            <!-- <img src="https://github.com/islonik/JsCraft/blob/main/lemon/assets/img/asset_16@4x.png?raw=true"> -->
-            <img src="img/asset_16.webp">
+            <!-- The wordmark is the page's only title, so it carries the <h1>
+                 and its alt text is the heading a screen reader announces. -->
+            <h1><img src="img/asset_16.webp" alt="Little Lemon" width="2000" height="546"></h1>
         </header>
 
         <nav>
@@ -43,40 +43,47 @@
 
             <div id="home">
                 <article>
-                    <b>We are providing a discount of 30% on your Birthday!</b><br/><br/>
-                    Book your party today! Just send us an email!
+                    <!-- Promotional copy, not a section label - emphasis, not a heading. -->
+                    <p><strong>We are providing a discount of 30% on your Birthday!</strong></p>
+                    <p>Book your party today! Just send us an email!</p>
                 </article>
                 <article>
-                    <img src="img/asset_20.webp" /><br/>
-                    <b>Opening hours</b><br/><br/>
-                    Monday-Friday:<br/>2pm - 10pm<br/><br/>
-                    Saturday:<br/>2pm - 11pm<br/><br/>
-                    Sunday:<br/>2pm - 9pm
+                    <!-- The lemon graphics are decorative: the heading beside each
+                         one already says what the card is. Empty alt keeps a screen
+                         reader from announcing four identical logos. -->
+                    <img src="img/asset_20.webp" alt="" width="128" height="224">
+                    <h2>Opening hours</h2>
+                    Monday-Friday:<br>2pm - 10pm<br><br>
+                    Saturday:<br>2pm - 11pm<br><br>
+                    Sunday:<br>2pm - 9pm
                 </article>
                 <article>
-                    <img src="img/asset_7.webp" /><br/>
-                    <b>Address</b><br/><br/>
-                    7500 W North Ave<br/>
-                    Elmwood Park<br/>
+                    <img src="img/asset_7.webp" alt="" width="133" height="224">
+                    <h2>Address</h2>
+                    7500 W North Ave<br>
+                    Elmwood Park<br>
                     60707
                 </article>
                 <article>
-                    <img src="img/asset_9.webp" /><br/>
-                    <b>Phone</b><br/><br/>
+                    <img src="img/asset_9.webp" alt="" width="133" height="224">
+                    <h2>Phone</h2>
                     708-452-6000
                 </article>
                 <article>
-                    <img src="img/asset_18.webp" /><br/>
-                    <b>Price</b><br/><br/>
+                    <img src="img/asset_18.webp" alt="" width="128" height="224">
+                    <h2>Price</h2>
                     $
                 </article>
             </div>
 
             <div id="menu" >
                 <div class="menu">
+                    <!-- These six photos live in a tab that is hidden on arrival.
+                         loading="lazy" keeps them out of the initial download and
+                         they fetch when the Menu tab is opened. -->
                     <div class="intro-menu">
-                        <img src="img/food_1.webp" />
-                        <img src="img/food_2.webp" />
+                        <img src="img/food_1.webp" alt="A hand squeezing lime over a row of tacos on a wooden board" width="993" height="1200" loading="lazy">
+                        <img src="img/food_2.webp" alt="Overhead view of loaded fries, salsa and dips" width="640" height="426" loading="lazy">
                     </div>
                     <section class="home-menu">
                         <h2>FOOD MENU</h2>
@@ -122,8 +129,8 @@
 
                 <div class="menu">
                     <div class="intro-menu">
-                        <img src="img/drink_1.webp" />
-                        <img src="img/drink_2.webp" />
+                        <img src="img/drink_1.webp" alt="Friends laughing together over cocktails" width="1000" height="1038" loading="lazy">
+                        <img src="img/drink_2.webp" alt="A tall glass of strawberry limeade garnished with lime" width="1000" height="667" loading="lazy">
                     </div>
 
                     <section class="home-menu">
@@ -176,8 +183,8 @@
 
                 <div class="menu">
                     <div class="intro-menu">
-                        <img src="img/desert_1.webp" />
-                        <img src="img/desert_2.webp" />
+                        <img src="img/desert_1.webp" alt="Sugar-dusted churro bites on a dark plate with chocolate sauce" width="427" height="640" loading="lazy">
+                        <img src="img/desert_2.webp" alt="Churros served with a cup of thick hot chocolate" width="1000" height="667" loading="lazy">
                     </div>
                     <section class="home-menu">
                         <h2>DESERT MENU</h2>
@@ -231,14 +238,14 @@
             <div id="about">
                 <p>Based in Chicago, Illinois, Little Lemon is a family-owned Mediterranean restaurant, focused on traditional recipes served with a modern twist. The chefs draw inspiration from Italian, Greek, and Turkish culture and have a menu of 12–15 items that they rotate seasonally. The restaurant has a rustic and relaxed atmosphere with moderate prices, making it a popular place for a meal any time of the day.</p>
 
-                <p>Little Lemon is owned by two Italian brothers, Mario and Adrian, who moved to the United States to pursue their shared dream of owning a restaurant. To craft the menu, Mario relies on family recipes and his experience as a chef in Italy. Adrian does all the marketing for the restaurant and led the effort to expand the menu beyond classic Italian to incorporate additional cuisines from the Mediterranean region.</p>   
+                <p>Little Lemon is owned by two Italian brothers, Mario and Adrian, who moved to the United States to pursue their shared dream of owning a restaurant. To craft the menu, Mario relies on family recipes and his experience as a chef in Italy. Adrian does all the marketing for the restaurant and led the effort to expand the menu beyond classic Italian to incorporate additional cuisines from the Mediterranean region.</p>
             </div>
         </main>
 
         <footer>
             <div>
                 <ul>
-                    <li><img src="img/asset_18.webp"></li>
+                    <li><img src="img/asset_18.webp" alt="" width="128" height="224"></li>
                     <li>Copyright Little Lemon</li>
                 </ul>
             </div>
