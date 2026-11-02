@@ -8,12 +8,10 @@ import {
     Box,
     Button,
     Center,
-    FormControl,
-    FormErrorMessage,
-    FormLabel,
+    Field,
     Heading,
     Input,
-    Select,
+    NativeSelect,
     Textarea,
     VStack,
   } from "@chakra-ui/react";
@@ -119,7 +117,7 @@ function Booking() {
     return (
       <Center>
         <VStack w="1024px" p={8} alignItems="center">
-          <Heading as="h1" >
+          <Heading as="h1" size={{ base: "3xl", lg: "4xl" }}>
             Reserve a table
           </Heading>
           <Box p={6} rounded="md" w="100%" alignItems="center">
@@ -127,10 +125,10 @@ function Booking() {
                 blocks submit on <input type="email"> and shows its own native
                 bubble, so the custom messages below never appeared. */}
             <form onSubmit={formik.handleSubmit} noValidate>
-              <VStack spacing={4}>
+              <VStack gap={4}>
 
-                <FormControl isInvalid={formik.touched.name && formik.errors.name}>
-                  <FormLabel htmlFor="fullName">Full name</FormLabel>
+                <Field.Root invalid={Boolean(formik.touched.name && formik.errors.name)}>
+                  <Field.Label htmlFor="fullName">Full name</Field.Label>
                   <Input
                     id="fullName"
                     name="name"
@@ -138,11 +136,11 @@ function Booking() {
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
                   />
-                  <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
-                </FormControl>
+                  <Field.ErrorText>{formik.errors.name}</Field.ErrorText>
+                </Field.Root>
 
-                <FormControl isInvalid={formik.touched.email && formik.errors.email}>
-                  <FormLabel htmlFor="email">Email</FormLabel>
+                <Field.Root invalid={Boolean(formik.touched.email && formik.errors.email)}>
+                  <Field.Label htmlFor="email">Email</Field.Label>
                   <Input
                     id="email"
                     name="email"
@@ -151,11 +149,11 @@ function Booking() {
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
                   />
-                  <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
-                </FormControl>
+                  <Field.ErrorText>{formik.errors.email}</Field.ErrorText>
+                </Field.Root>
 
-                <FormControl isInvalid={formik.touched.phone && formik.errors.phone}>
-                  <FormLabel htmlFor="phone">Phone number</FormLabel>
+                <Field.Root invalid={Boolean(formik.touched.phone && formik.errors.phone)}>
+                  <Field.Label htmlFor="phone">Phone number</Field.Label>
                   <Input
                     id="phone"
                     name="phone"
@@ -164,29 +162,44 @@ function Booking() {
                     onBlur={formik.handleBlur}
                     value={formik.values.phone}
                   />
-                  <FormErrorMessage>{formik.errors.phone}</FormErrorMessage>
-                </FormControl>
+                  <Field.ErrorText>{formik.errors.phone}</Field.ErrorText>
+                </Field.Root>
 
-                <FormControl isInvalid={formik.errors.type}>
-                  <FormLabel htmlFor="type">Type of lunch</FormLabel>
-                  <Select
-                    id="type"
-                    name="type"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.type}
-                    >
-                      <option value="business">Business</option>
-                      <option value="birthday">Birthday</option>
-                  </Select>
-                  <FormErrorMessage>{formik.values.type}</FormErrorMessage>
-                </FormControl>
+                <Field.Root invalid={Boolean(formik.errors.type)}>
+                  <Field.Label htmlFor="type">Type of lunch</Field.Label>
+                  <NativeSelect.Root>
+                    <NativeSelect.Field
+                      id="type"
+                      name="type"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.type}
+                      >
+                        <option value="business">Business</option>
+                        <option value="birthday">Birthday</option>
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator color="inherit" />
+                  </NativeSelect.Root>
+                  <Field.ErrorText>{formik.values.type}</Field.ErrorText>
+                </Field.Root>
 
-                <FormControl isInvalid={formik.touched.date && formik.errors.date}>
-                  <FormLabel htmlFor="date">Date</FormLabel>
+                <Field.Root invalid={Boolean(formik.touched.date && formik.errors.date)}>
+                  <Field.Label htmlFor="date">Date</Field.Label>
                   <SingleDatepicker
                     id="date"
                     name="date"
+                    // Version 3 of the date picker opens from a button. Its
+                    // "input" variant opens only from a small icon, where the
+                    // old picker opened on a click anywhere in the field, so
+                    // the button stays and is styled like the inputs around it.
+                    propsConfigs={{
+                      triggerBtnProps: {
+                        variant: "outline",
+                        width: "100%",
+                        justifyContent: "flex-start",
+                        fontWeight: "normal",
+                      },
+                    }}
                     type="date"
                     format="yyyy-MM-dd"
                     onDateChange={value => formik.setFieldValue('date', value)}
@@ -195,11 +208,11 @@ function Booking() {
                     minDate={subDays(new Date(), 1)}
                     date={formik.values.date}
                   />
-                  <FormErrorMessage>{formik.errors.date}</FormErrorMessage>
-                </FormControl>
+                  <Field.ErrorText>{formik.errors.date}</Field.ErrorText>
+                </Field.Root>
 
-                <FormControl isInvalid={formik.touched.guests && formik.errors.guests}>
-                  <FormLabel htmlFor="guests">Number of guests</FormLabel>
+                <Field.Root invalid={Boolean(formik.touched.guests && formik.errors.guests)}>
+                  <Field.Label htmlFor="guests">Number of guests</Field.Label>
                   <Input
                     id="guests"
                     name="guests"
@@ -208,11 +221,11 @@ function Booking() {
                     onBlur={formik.handleBlur}
                     value={formik.values.guests}
                   />
-                  <FormErrorMessage>{formik.errors.guests}</FormErrorMessage>
-                </FormControl>
+                  <Field.ErrorText>{formik.errors.guests}</Field.ErrorText>
+                </Field.Root>
 
-                <FormControl isInvalid={formik.touched.comment && formik.errors.comment}>
-                  <FormLabel htmlFor="comment">Your message</FormLabel>
+                <Field.Root invalid={Boolean(formik.touched.comment && formik.errors.comment)}>
+                  <Field.Label htmlFor="comment">Your message</Field.Label>
                   <Textarea
                     id="comment"
                     name="comment"
@@ -221,17 +234,17 @@ function Booking() {
                     onBlur={formik.handleBlur}
                     value={formik.values.comment}
                   />
-                  <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
-                </FormControl>
+                  <Field.ErrorText>{formik.errors.comment}</Field.ErrorText>
+                </Field.Root>
 
                 <Button
                   id="booking-submit"
                   type="submit"
                   color="yellow"
-                  colorScheme="lemon"
+                  colorPalette="lemon"
                   width="full"
                   disabled={isLoading}
-                  isLoading={isLoading}>
+                  loading={isLoading}>
                     Submit
                 </Button>
               </VStack>

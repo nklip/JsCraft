@@ -15,11 +15,16 @@ const LandingSection = () => (
     isDarkBackground
     backgroundColor="#2A4365"
   >
-    <Avatar name="Nick Milano" src="https://i.pravatar.cc/450?img=12" size="3xl"/>
-    <Heading>{greeting}</Heading>
+    {/* 2xl is the largest avatar size. The previous size="3xl" exists in no
+        Chakra release, so it always rendered as a tiny fallback box. */}
+    <Avatar.Root size="2xl">
+      <Avatar.Fallback name="Nick Milano" />
+      <Avatar.Image src="https://i.pravatar.cc/450?img=12" />
+    </Avatar.Root>
+    <Heading size={{ base: "3xl", lg: "4xl" }}>{greeting}</Heading>
     <VStack>
-      <Heading>{bio1}</Heading>
-      <Heading>{bio2}</Heading>
+      <Heading size={{ base: "3xl", lg: "4xl" }}>{bio1}</Heading>
+      <Heading size={{ base: "3xl", lg: "4xl" }}>{bio2}</Heading>
     </VStack>
 
   </FullScreenSection>

@@ -35,7 +35,7 @@ function nonWhiteStatusByBmi(bmi) {
     }
 }
 
-// Guarded so this same file works both under Jest/Node (require, as the
+// Guarded so this same file works both under Vitest/Node (require, as the
 // tests do) and as a plain <script src="bmi.js"> on the webpage, where
 // `module` does not exist and would otherwise throw a ReferenceError.
 if (typeof module !== "undefined") {

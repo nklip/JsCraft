@@ -1,4 +1,5 @@
-import {act, fireEvent, render, screen} from '@testing-library/react';
+import {act, fireEvent, screen} from '@testing-library/react';
+import { render } from './test-utils';
 
 import Alert from '../components/Alert';
 import Booking from '../components/Booking';

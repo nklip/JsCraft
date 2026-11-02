@@ -56,9 +56,9 @@ const ProjectsSection = () => {
       isDarkBackground
       p={24}
       alignItems="flex-start"
-      spacing={8}
+      gap={8}
     >
-      <Heading as="h1" >
+      <Heading as="h1" size={{ base: "3xl", lg: "4xl" }}>
         Featured Projects
       </Heading>
       <Box

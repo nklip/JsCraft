@@ -81,11 +81,14 @@ import { Avatar, Heading, VStack } from "@chakra-ui/react";
 
 #### Usage
 ```js
-  <Avatar name="Nick Jonas" src="https://i.pravatar.cc/150?img=3" size="6xl"/>
-  <Heading>{greeting}</Heading>
+  <Avatar.Root size="2xl">
+    <Avatar.Fallback name="Nick Milano" />
+    <Avatar.Image src="https://i.pravatar.cc/450?img=12" />
+  </Avatar.Root>
+  <Heading size={{ base: "3xl", lg: "4xl" }}>{greeting}</Heading>
   <VStack>
-    <Heading>{bio1}</Heading>
-    <Heading>{bio2}</Heading>
+    <Heading size={{ base: "3xl", lg: "4xl" }}>{bio1}</Heading>
+    <Heading size={{ base: "3xl", lg: "4xl" }}>{bio2}</Heading>
   </VStack>
 ```
 
@@ -150,8 +153,8 @@ If you want to use any methods from the formik library inside your onSubmit func
 #### Input
 
 ```js
-  <FormControl isInvalid={formik.touched.firstName && formik.errors.firstName}>
-    <FormLabel htmlFor="firstName">Name</FormLabel>
+  <Field.Root invalid={Boolean(formik.touched.firstName && formik.errors.firstName)}>
+    <Field.Label htmlFor="firstName">Name</Field.Label>
     <Input
       id="firstName"
       name="firstName"
@@ -159,6 +162,6 @@ If you want to use any methods from the formik library inside your onSubmit func
       onBlur={formik.handleBlur}
       value={formik.values.firstName}
     />
-    <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
-  </FormControl>
+    <Field.ErrorText>{formik.errors.firstName}</Field.ErrorText>
+  </Field.Root>
 ```

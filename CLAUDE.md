@@ -33,7 +33,8 @@ point of this family — it rules out ES module `import` between files, `fetch()
 JSON, and anything else that needs an origin. Scripts communicate through globals on
 `window`, which is a deliberate trade, not an oversight.
 
-`bmi/` has a `package.json`, but only for Jest. The page itself still runs unbuilt.
+`bmi/` has a `package.json`, but only for its Vitest tests. Vite runs the tests; the page
+itself still runs unbuilt.
 
 ### 2. Bundled apps (Vite)
 
