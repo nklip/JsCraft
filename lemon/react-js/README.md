@@ -30,6 +30,7 @@ and `npm test` runs the suite under Vitest.
 * [How to create and share global properties](#how-to-create-and-share-global-properties)
 * [How to add a custom color for a button](#how-to-add-a-custom-color-for-a-button)
 * [How to update date in Formik](#how-to-update-date-in-formik)
+* [Dependencies](#dependencies)
 * [TODOs](#todos)
 
 ### How to create a DB mock using json-server
@@ -263,6 +264,17 @@ Update date using Chakra library
     <FormErrorMessage>{formik.errors.date}</FormErrorMessage>
 </FormControl>
 ```
+
+### Dependencies
+<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
+
+`package.json` sets an `overrides` entry that lets `dayzed` use this app's React. dayzed
+3.2.3, its newest release and the engine under `chakra-dayzed-datepicker`'s date picker,
+declares React only up to 18, so without the override `npm ci` refuses React 19 and newer
+npm versions quietly install a second, nested React 18 for it instead. With the override
+there is one React, and the booking form's date picker opens, moves between months and sets
+the date as it did on React 18. Remove the entry once a dayzed release accepts React 19, or
+when the date picker moves to `chakra-dayzed-datepicker` 3, which needs Chakra UI 3.
 
 ### TODOs
 

@@ -35,6 +35,9 @@ function Booking() {
         email:    Yup.string()
                   .label("email")
                   .email('Invalid email address')
+                  // yup 1's email() matches the browser's check, which accepts
+                  // a domain without a dot ("user@localhost"); yup 0.32 did not.
+                  .matches(/@[^@\s]+\.[^@\s]+$/, { message: 'Invalid email address', excludeEmptyString: true })
                   .required('Required Email address'),
         phone:    Yup.string()
                   .label("phone")
