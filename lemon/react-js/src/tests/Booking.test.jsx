@@ -94,6 +94,27 @@ test('wrong Email address', async() => {
     expect(requiredText).toBeInTheDocument();
 });
 
+test('Email address without a dot in the domain', async() => {
+    // yup 1's email check follows the browser's and accepts "user@localhost";
+    // the booking form still requires a domain with a dot, as it did on yup 0.32.
+    const dom = render(
+        <AlertProvider>
+            <Booking />
+        </AlertProvider>
+    );
+
+    let emailInput = dom.container.querySelector("#email");
+    fireEvent.change(emailInput, {
+      target: {value: 'user@localhost'}
+    });
+
+    let submit = await dom.container.querySelector("#booking-submit");
+    fireEvent.click(submit);
+
+    let requiredText = await screen.findByText("Invalid email address");
+    expect(requiredText).toBeInTheDocument();
+});
+
 test('empty phone', async() => {
     const dom = render(
         <AlertProvider>
