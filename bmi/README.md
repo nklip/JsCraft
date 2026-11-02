@@ -66,4 +66,19 @@ To run tests -> execute next command line: <b>npm run test</b>
 * index.html / css/style.css / js/app.js are the webpage that wraps bmi.js.
 * js/theme-init.js applies a saved theme choice before first paint, avoiding a flash of the wrong theme.
 
+## Dependencies
+<sub>[Back to top](#bmi)</sub>
+
+`package.json` sets `overrides` for `glob` (^14.0.3) and `minimatch` (^11.0.4). jest 30, the
+newest release, still pulls glob 10 and 13 and minimatch 9, which carry two advisories:
+[GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4) (glob before 14.0.2) and
+[GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) (minimatch before 11.0.1).
+glob 14 and minimatch 11 keep the API jest calls, and `jest --coverage` reports the same table
+with the override as without it. Remove the `overrides` block once jest depends on those
+versions or later.
+
+One advisory stays: deepmerge
+([GHSA-gcqx-w48m-w2h4](https://github.com/advisories/GHSA-gcqx-w48m-w2h4), low), which jest
+uses to merge its own configuration. No release of deepmerge fixes it.
+
 

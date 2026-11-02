@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import { fireEvent, render as rtlRender, screen, within } from "@testing-library/react";
+import { act, fireEvent, render as rtlRender, screen, within } from "@testing-library/react";
 import { beforeEach, afterEach, expect, test, vi } from "vitest";
 import App from "./App";
 
@@ -41,8 +41,16 @@ function mockForecast({ temperature_2m = 15, weather_code = 0, wind_speed_10m = 
 // nothing is pending.
 async function flush(times = 3) {
   for (let i = 0; i < times; i++) {
-    await vi.advanceTimersByTimeAsync(0);
+    await advance(0);
   }
+}
+
+// Moving the fake clock fires the component's timers, and their state updates
+// have to land inside act(). React 18 applied an update made outside it at
+// once; React 19 schedules it, so the countdown still read 15:00 when the
+// assertion ran. Every clock advance goes through here.
+async function advance(ms) {
+  await act(() => vi.advanceTimersByTimeAsync(ms));
 }
 
 function cityCard(name) {
@@ -97,12 +105,12 @@ test("counts down every second and refreshes once it reaches 0", async () => {
 
   expect(screen.getByTestId("countdown")).toHaveTextContent("Next update in 15:00");
 
-  await vi.advanceTimersByTimeAsync(1000);
+  await advance(1000);
   expect(screen.getByTestId("countdown")).toHaveTextContent("Next update in 14:59");
   expect(fetchSpy).toHaveBeenCalledTimes(MOUNT_FETCH_CALLS); // no refetch yet
 
   // run out the remaining 14:59, then let the triggered refresh settle
-  await vi.advanceTimersByTimeAsync(14 * 60 * 1000 + 59 * 1000);
+  await advance(14 * 60 * 1000 + 59 * 1000);
   await flush();
 
   expect(screen.getByTestId("countdown")).toHaveTextContent("Next update in 15:00");
@@ -118,7 +126,7 @@ test("clicking Refresh now fetches immediately and rearms the countdown", async 
 
   // let the countdown move off 15:00 first, so resetting it back is an
   // observable change rather than a coincidence
-  await vi.advanceTimersByTimeAsync(37 * 1000);
+  await advance(37 * 1000);
   expect(screen.getByTestId("countdown")).toHaveTextContent("Next update in 14:23");
 
   fireEvent.click(screen.getByText("Refresh now"));
@@ -155,7 +163,7 @@ test("a refresh failure keeps the last known reading instead of blanking the car
   }
 
   fetchSpy.mockRejectedValue(new Error("timeout"));
-  await vi.advanceTimersByTimeAsync(15 * 60 * 1000);
+  await advance(15 * 60 * 1000);
   await flush();
 
   // stale reading is still visible, plus a note that it could not refresh

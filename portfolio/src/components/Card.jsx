@@ -12,7 +12,7 @@ const Card = ({ title, description, preview, imageSrc }) => {
       <HStack className="see">
         <Text>See more</Text>
         <a href={imageSrc}>
-          <FontAwesomeIcon icon={faArrowRight} size="1x" />
+          <FontAwesomeIcon icon={faArrowRight} size="1x" widthAuto />
         </a>
       </HStack>
     </VStack>
