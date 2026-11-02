@@ -20,6 +20,6 @@
   "author": "Nikita Lipatov",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^29.6.1"
+    "jest": "^30.5.2"
   }
 }
