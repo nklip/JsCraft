@@ -1,0 +1,33 @@
+# Opens pull requests for dependency updates and security fixes, so the
+# lockfiles stop drifting between hand-run upgrades.
+version: 2
+
+updates:
+  # One entry per npm project: each owns its package-lock.json. The build-free
+  # pages have no package.json and nothing for Dependabot to read. A new npm
+  # project needs its directory added here; CI finds it on its own.
+  - package-ecosystem: "npm"
+    directories:
+      - "/bmi"
+      - "/lemon/react-js"
+      - "/portfolio"
+      - "/tic-tac-toe-js"
+      - "/weather"
+    schedule:
+      interval: "weekly"
+    groups:
+      # Minor and patch bumps travel together, one pull request per project.
+      # Majors stay on their own, because those are the ones worth reading.
+      routine:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    open-pull-requests-limit: 5
+
+  # The workflow pins actions by moving major tag; this proposes new majors.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
