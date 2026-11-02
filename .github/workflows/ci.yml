@@ -1,0 +1,62 @@
+# Runs what a developer runs in each npm project: a clean install from the
+# lockfile, the tests, and the build where there is one. Every project owns its
+# own dependencies, so each gets its own job.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Nothing here writes to the repository.
+permissions:
+  contents: read
+
+# A new push to a branch makes the run in progress obsolete.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  projects:
+    name: Discover projects
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # Every tracked package.json marks a project, so a new one is tested
+      # without anyone editing this file. The build-free pages have no
+      # package.json and nothing to install, test or build.
+      - id: list
+        run: echo "matrix=$(git ls-files ':(glob)**/package.json' | xargs -n1 dirname | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+
+  check:
+    name: ${{ matrix.project }}
+    needs: projects
+    runs-on: ubuntu-latest
+    strategy:
+      # One project failing should not hide the state of the others.
+      fail-fast: false
+      matrix:
+        project: ${{ fromJSON(needs.projects.outputs.matrix) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # The active LTS line. tic-tac-toe-js's mocha 12 needs Node 22.12 or
+      # later, so an older line would fail there first.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: ${{ matrix.project }}/package-lock.json
+
+      - run: npm ci
+      - run: npm test
+      # tic-tac-toe-js and bmi have no build step; --if-present skips them.
+      - run: npm run build --if-present
