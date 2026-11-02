@@ -16,6 +16,18 @@ updates:
     schedule:
       interval: "weekly"
     groups:
+      # Packages that only install as a family move together, majors included,
+      # so a new major arrives as one pull request npm ci accepts rather than
+      # one package that its peers reject. Dependabot puts a dependency in the
+      # first group it matches, so these sit above `routine`.
+      react:
+        # framer-motion 7 accepts only React 18, and @testing-library/react
+        # 13 only react-dom 18: neither can stay behind on React 19.
+        patterns: ["react", "react-dom", "@testing-library/react", "framer-motion"]
+      fontawesome:
+        # react-fontawesome 0.2 accepts fontawesome-svg-core up to 6, and the
+        # icon packages track svg-core's major.
+        patterns: ["@fortawesome/*"]
       # Minor and patch bumps travel together, one pull request per project.
       # Majors stay on their own, because those are the ones worth reading.
       routine:
