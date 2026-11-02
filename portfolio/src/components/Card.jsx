@@ -7,7 +7,7 @@ const Card = ({ title, description, preview, imageSrc }) => {
   return (
     <VStack alignItems="start" className="card">
       <Image className="image" src={preview} alt={title}/>
-      <Heading as='h4' size='md' className="title">{title}</Heading>
+      <Heading as='h4' size='xl' className="title">{title}</Heading>
       <Text className="desc">{description}</Text>
       <HStack className="see">
         <Text>See more</Text>

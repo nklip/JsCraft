@@ -9,7 +9,7 @@ import { Center, SimpleGrid, Box, HStack, VStack, Image } from "@chakra-ui/react
 function About() {
     return (
         <Center>
-            <SimpleGrid columns={2} spacing={10}>
+            <SimpleGrid columns={2} gap={10}>
                 <Box>
                     <div id="about">
                         <div>

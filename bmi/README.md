@@ -58,27 +58,20 @@ The "?" button, next to the theme toggle, explains the units for each mode and h
 
 To run tests -> execute next command line: <b>npm run test</b>
 
+The tests run on [Vitest](https://vitest.dev/). `--globals` in the `test` script provides
+`test` and `expect` without an import, as Jest did, so `bmi.test.js` reads the same under
+either. Vite is used only to run the tests; the page itself is never built.
+
+bmi tested with Jest until
+[GHSA-gcqx-w48m-w2h4](https://github.com/advisories/GHSA-gcqx-w48m-w2h4) was published against
+deepmerge, which every Jest release since 25.2 depends on and no deepmerge release fixes.
+Vitest does not use deepmerge, and it is what `lemon/react-js`, `portfolio` and `weather`
+already test with.
+
 ## Notes
 <sub>[Back to top](#bmi)</sub>
 
-* bmi.js is a js file with simple js functions, used both by the Jest tests and directly by index.html as a plain `<script>`.
-* bmi.test.js is a test file which contains Jest tests.
+* bmi.js is a js file with simple js functions, used both by the Vitest tests and directly by index.html as a plain `<script>`.
+* bmi.test.js is a test file which contains Vitest tests.
 * index.html / css/style.css / js/app.js are the webpage that wraps bmi.js.
 * js/theme-init.js applies a saved theme choice before first paint, avoiding a flash of the wrong theme.
-
-## Dependencies
-<sub>[Back to top](#bmi)</sub>
-
-`package.json` sets `overrides` for `glob` (^14.0.3) and `minimatch` (^11.0.4). jest 30, the
-newest release, still pulls glob 10 and 13 and minimatch 9, which carry two advisories:
-[GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4) (glob before 14.0.2) and
-[GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) (minimatch before 11.0.1).
-glob 14 and minimatch 11 keep the API jest calls, and `jest --coverage` reports the same table
-with the override as without it. Remove the `overrides` block once jest depends on those
-versions or later.
-
-One advisory stays: deepmerge
-([GHSA-gcqx-w48m-w2h4](https://github.com/advisories/GHSA-gcqx-w48m-w2h4), low), which jest
-uses to merge its own configuration. No release of deepmerge fixes it.
-
-

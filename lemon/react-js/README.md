@@ -30,7 +30,6 @@ and `npm test` runs the suite under Vitest.
 * [How to create and share global properties](#how-to-create-and-share-global-properties)
 * [How to add a custom color for a button](#how-to-add-a-custom-color-for-a-button)
 * [How to update date in Formik](#how-to-update-date-in-formik)
-* [Dependencies](#dependencies)
 * [TODOs](#todos)
 
 ### How to create a DB mock using json-server
@@ -147,53 +146,69 @@ Chakra button component looks like:
 ```jsx
 <Button
     type="submit"
-    colorScheme="lemon"
+    colorPalette="lemon"
     width="full"
     disabled={isLoading}
-    isLoading={isLoading}>
+    loading={isLoading}>
     Submit
 </Button>
 ```
-Use the <b>colorScheme</b> prop to change the color scheme of the Button. You can set the value to any of the color scales from your design system, like whiteAlpha, blackAlpha, gray, red, blue, or your custom color scale.
+Use the <b>colorPalette</b> prop to change the colours of the Button. You can set the value to any of the palettes in the theme, like gray, red, blue, or your own palette.
 
-https://chakra-ui.com/docs/components/button/usage
+https://chakra-ui.com/docs/components/button
 
-But the colorScheme just accepts the color name. So if we want to add our color we would need to specify our custom color.
+The colorPalette prop takes only a palette's name, so a colour of our own has to be added to the theme first.
 
-To do it we need to extend the standard Chakra theme.
+Chakra UI 3 builds the theme with `createSystem`, which `src/lib/theme.js` does:
 ```jsx
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
-const theme = extendTheme({
-  colors: {
-    lemon: {
-      500: "#b2c3af"
-    }
-  }
+const config = defineConfig({
+  theme: {
+    tokens: {
+      colors: {
+        lemon: { 500: { value: "#b2c3af" } },
+      },
+    },
+    semanticTokens: {
+      colors: {
+        lemon: {
+          solid: { value: "{colors.lemon.500}" },
+          contrast: { value: "white" },
+          fg: { value: "{colors.lemon.500}" },
+          muted: { value: "{colors.lemon.500}" },
+          subtle: { value: "{colors.lemon.500}" },
+          emphasized: { value: "{colors.lemon.500}" },
+          focusRing: { value: "{colors.lemon.500}" },
+        },
+      },
+    },
+  },
 });
+
+export const system = createSystem(defaultConfig, config);
+```
+
+`App.jsx` then hands the system to the provider:
+```jsx
+import { ChakraProvider } from "@chakra-ui/react";
+import { system } from "./lib/theme";
 
 function App() {
   return (
-    <Fragment>
-      <ChakraProvider theme={theme}>
-        <Header/>
-        <Nav/>
-          <AlertProvider>
-            <BrowserRouter>
-              <Main/>
-            </BrowserRouter>
-            <Alert/>
-          </AlertProvider>
-        <Footer/>
-      </ChakraProvider>
-    </Fragment>
+    <ChakraProvider value={system}>
+      ...
+    </ChakraProvider>
   );
 }
 ```
 
-If we inspect the way Chakra works to generate the colorScheme for a solid button, we can notice that it calls ${c}.500.
+A colour alone is not enough for colorPalette. The palette also needs the semantic tokens
+the components read: `solid` is the fill of a solid button and `contrast` the text on it.
+The others serve the subtle, outline and ghost variants and the focus ring. Lemon has only
+one shade, so every token except `contrast` points at it.
 
-It means that when you create your own color scheme, you need to specify one color for 500.
+https://chakra-ui.com/docs/theming/customization/colors
 
 Then we can use lemon color for our button.
 
@@ -249,11 +264,19 @@ const formik = useFormik({
 
 Update date using Chakra library
 ```jsx
-<FormControl isInvalid={formik.touched.date && formik.errors.date}>
-    <FormLabel htmlFor="date">Date</FormLabel>
+<Field.Root invalid={Boolean(formik.touched.date && formik.errors.date)}>
+    <Field.Label htmlFor="date">Date</Field.Label>
     <SingleDatepicker
         id="date"
         name="date"
+        propsConfigs={{
+            triggerBtnProps: {
+                variant: "outline",
+                width: "100%",
+                justifyContent: "flex-start",
+                fontWeight: "normal",
+            },
+        }}
         type="date"
         format="yyyy-MM-dd"
         onDateChange={value => formik.setFieldValue('date', value)}
@@ -261,20 +284,13 @@ Update date using Chakra library
         minDate={new Date()}
         date={formik.values.date}
     />
-    <FormErrorMessage>{formik.errors.date}</FormErrorMessage>
-</FormControl>
+    <Field.ErrorText>{formik.errors.date}</Field.ErrorText>
+</Field.Root>
 ```
 
-### Dependencies
-<sub>[Back to top](#little-lemon---react-js-implementation)</sub>
-
-`package.json` sets an `overrides` entry that lets `dayzed` use this app's React. dayzed
-3.2.3, its newest release and the engine under `chakra-dayzed-datepicker`'s date picker,
-declares React only up to 18, so without the override `npm ci` refuses React 19 and newer
-npm versions quietly install a second, nested React 18 for it instead. With the override
-there is one React, and the booking form's date picker opens, moves between months and sets
-the date as it did on React 18. Remove the entry once a dayzed release accepts React 19, or
-when the date picker moves to `chakra-dayzed-datepicker` 3, which needs Chakra UI 3.
+`chakra-dayzed-datepicker` 3 opens the calendar from a button. `triggerBtnProps` styles
+that button like the inputs around it. Its `triggerVariant="input"` alternative opens the
+calendar only from a small icon beside the field.
 
 ### TODOs
 

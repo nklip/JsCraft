@@ -3,12 +3,10 @@ import { useFormik } from "formik";
 import {
   Box,
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
+  Field,
   Heading,
   Input,
-  Select,
+  NativeSelect,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
@@ -69,18 +67,18 @@ const LandingSection = () => {
       isDarkBackground
       backgroundColor="#512DA8"
       py={16}
-      spacing={8}
+      gap={8}
     >
       <VStack w="1024px" p={8} alignItems="flex-start">
-        <Heading as="h1" >
+        <Heading as="h1" size={{ base: "3xl", lg: "4xl" }}>
           Contact me
         </Heading>
         <Box p={6} rounded="md" w="100%">
           <form onSubmit={formik.handleSubmit}>
-            <VStack spacing={4}>
+            <VStack gap={4}>
 
-              <FormControl isInvalid={formik.touched.firstName && formik.errors.firstName}>
-                <FormLabel htmlFor="firstName">Name</FormLabel>
+              <Field.Root invalid={Boolean(formik.touched.firstName && formik.errors.firstName)}>
+                <Field.Label htmlFor="firstName">Name</Field.Label>
                 <Input
                   id="firstName"
                   name="firstName"
@@ -88,11 +86,11 @@ const LandingSection = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.firstName}
                 />
-                <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
-              </FormControl>
+                <Field.ErrorText>{formik.errors.firstName}</Field.ErrorText>
+              </Field.Root>
 
-              <FormControl isInvalid={formik.touched.email && formik.errors.email}>
-                <FormLabel htmlFor="email">Email Address</FormLabel>
+              <Field.Root invalid={Boolean(formik.touched.email && formik.errors.email)}>
+                <Field.Label htmlFor="email">Email Address</Field.Label>
                 <Input
                   id="email"
                   name="email"
@@ -101,29 +99,32 @@ const LandingSection = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
                 />
-                <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
-              </FormControl>
+                <Field.ErrorText>{formik.errors.email}</Field.ErrorText>
+              </Field.Root>
 
-              <FormControl isInvalid={formik.errors.type}>
-                <FormLabel htmlFor="type">Type of enquiry</FormLabel>
-                <Select 
-                  id="type" 
-                  name="type"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.type}
-                  >
-                    <option value="hireMe">Freelance project proposal</option>
-                    <option value="openSource">
-                      Open source consultancy session
-                    </option>
-                    <option value="other">Other</option>
-                </Select>
-                <FormErrorMessage>{formik.values.type}</FormErrorMessage>
-              </FormControl>
+              <Field.Root invalid={Boolean(formik.errors.type)}>
+                <Field.Label htmlFor="type">Type of enquiry</Field.Label>
+                <NativeSelect.Root>
+                  <NativeSelect.Field
+                    id="type"
+                    name="type"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.type}
+                    >
+                      <option value="hireMe">Freelance project proposal</option>
+                      <option value="openSource">
+                        Open source consultancy session
+                      </option>
+                      <option value="other">Other</option>
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator color="inherit" />
+                </NativeSelect.Root>
+                <Field.ErrorText>{formik.values.type}</Field.ErrorText>
+              </Field.Root>
 
-              <FormControl isInvalid={formik.touched.comment && formik.errors.comment}>
-                <FormLabel htmlFor="comment">Your message</FormLabel>
+              <Field.Root invalid={Boolean(formik.touched.comment && formik.errors.comment)}>
+                <Field.Label htmlFor="comment">Your message</Field.Label>
                 <Textarea
                   id="comment"
                   name="comment"
@@ -132,15 +133,15 @@ const LandingSection = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.comment}
                 />
-                <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
-              </FormControl>
+                <Field.ErrorText>{formik.errors.comment}</Field.ErrorText>
+              </Field.Root>
 
               <Button 
                 type="submit" 
-                colorScheme="purple" 
-                width="full" 
-                disabled={isLoading} 
-                isLoading={isLoading}>
+                colorPalette="purple"
+                width="full"
+                disabled={isLoading}
+                loading={isLoading}>
                   Submit
               </Button>
             </VStack>
