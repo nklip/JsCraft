@@ -5,7 +5,7 @@ Node.js project. UI. Tic-tac-toe game.
 
 ## Dependencies
 
-`package.json` sets `overrides` for `glob` (^14.0.3) and `minimatch` (^11.0.4).
+`package.json` sets `overrides` for `glob` (^14.0.4) and `minimatch` (^11.0.7).
 minimatch below 11.0.1 carries a denial-of-service advisory
 ([GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249)), and
 mocha 12 and c8 12, the newest releases, still require minimatch 10 through glob 13.
